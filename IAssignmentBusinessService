@@ -1,0 +1,674 @@
+package com.mhe.connect.business.assignments.common.service;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.SortedMap;
+
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.mhe.connect.business.common.exceptions.DataStoreException;
+import com.mhe.connect.business.common.exceptions.InvalidAssignmentTypeException;
+import com.mhe.connect.business.common.valueobj.AssignmentType;
+import com.mhe.connect.business.course.valueobj.AssignmentDetailsHeader;
+import com.mhe.connect.business.course.valueobj.Section;
+import com.mhe.connect.business.course.valueobj.Student;
+import com.mhe.connect.business.gradebook.valueobj.Activity;
+import com.mhe.connect.business.gradebook.valueobj.AdditionalResponseMaterial;
+import com.mhe.connect.business.gradebook.valueobj.Assignment;
+import com.mhe.connect.business.gradebook.valueobj.AssignmentLineItem;
+import com.mhe.connect.business.gradebook.valueobj.ClassmatesActivityTO;
+import com.mhe.connect.business.gradebook.valueobj.ExpiredAssignmentVO;
+import com.mhe.connect.business.gradebook.valueobj.Group;
+import com.mhe.connect.business.gradebook.valueobj.GroupAssignment;
+import com.mhe.connect.business.gradebook.valueobj.HMAssignmentCategoryPolicy;
+import com.mhe.connect.business.gradebook.valueobj.HMAssignmentPolicyException;
+import com.mhe.connect.business.gradebook.valueobj.HomeworkManagerPolicy;
+import com.mhe.connect.business.gradebook.valueobj.Module;
+import com.mhe.connect.business.gradebook.valueobj.PrivilegePolicy;
+import com.mhe.connect.business.gradebook.valueobj.ResponseDocument;
+import com.mhe.connect.business.gradebook.valueobj.SectionAssignmentLineItemActivity;
+import com.mhe.connect.business.gradebook.valueobj.StudentActivityInfo;
+import com.mhe.connect.exception.ConnectApplicationException;
+import com.mhe.connect.exception.ConnectSystemException;
+import com.mhe.middleware.connect.adapter.AssignmentResourceAdapter;
+
+/**
+ * This interface defines methods for common assignment specific business operations.
+ * 
+ * @author MHHE
+ */
+public interface IAssignmentBusinessService {
+
+	/**
+	 * Method to get the assignment for the given assignment id
+	 * 
+	 * @param assignmentId Assignment id
+	 * @return an Assignment object for the given id
+	 */
+	@Transactional(readOnly = true, propagation = Propagation.SUPPORTS, rollbackFor = Exception.class)
+	Assignment getAssignmentById(Long assignmentId, Long sectionId) throws ConnectApplicationException,
+			ConnectSystemException;
+
+	/**
+	 * Method to check whether the assignment is shared in section or not for the given section id and assignment id
+	 * 
+	 * @param sectionId Section id
+	 * @param assignmentId Assignment id
+	 * @return 'true' if assignment is shared in section. Otherwise returns 'false'.
+	 */
+	@Transactional(readOnly = true, propagation = Propagation.SUPPORTS, rollbackFor = Exception.class)
+	boolean isAssignmentSharedInSection(Long sectionId, Long assignmentId) throws ConnectSystemException;
+
+	/**
+	 * This will return the status of the assignment from Assignment table.
+	 * 
+	 * @param assignmentId Assignment id
+	 * @param sectionId Section id
+	 * @return status of assignment
+	 */
+	@Transactional(readOnly = true, propagation = Propagation.SUPPORTS, rollbackFor = Exception.class)
+	String getAssignmentStatus(Long assignmentId, Long sectionId) throws ConnectSystemException;
+
+	/**
+	 * This will return the parent section id of the assignment
+	 * 
+	 * @param assignmentId Assignment id
+	 * @return parent section id
+	 */
+	@Transactional(readOnly = true, propagation = Propagation.SUPPORTS, rollbackFor = Exception.class)
+	Long getAssignmentParentSectionId(Long assignmentId) throws ConnectSystemException;
+
+	/**
+	 * This will fetch the BB flag from the section-assignment association as well as from assignment table.
+	 * 
+	 * @param assignmentID Assignment id
+	 * @param sectionID Section id
+	 * @return a map of Blackboard flag with boolean result (Map<String, Boolean>)
+	 */
+	@Transactional(readOnly = false, propagation = Propagation.SUPPORTS, rollbackFor = Exception.class)
+	Map<String, Boolean> getBBFlags(Long assignmentID, Long sectionID) throws ConnectSystemException;
+
+	/**
+	 * This will fetch the information whether Assignment is active in the section or not.
+	 * 
+	 * @param assignmentId Assignment id
+	 * @param sectionId Section id
+	 * @return boolean 'true' if assignment is active. Otherwise returns 'false'
+	 */
+	@Transactional(readOnly = true, propagation = Propagation.SUPPORTS, rollbackFor = Exception.class)
+	boolean isAssignmentActiveInSection(Long assignmentId, Long sectionId) throws ConnectSystemException;
+
+	/**
+	 * This will retrieve the policy for the assignment in the section for the user
+	 * 
+	 * @param assignmentID Assignment id
+	 * @param sectionId Section id
+	 * @param userId User id
+	 * @return HMAssignmentCategoryPolicy object
+	 */
+	@Transactional(readOnly = true, propagation = Propagation.SUPPORTS, rollbackFor = Exception.class)
+	HMAssignmentCategoryPolicy getAssignmentPolicies(Long assignmentID, Long sectionId);
+
+	/**
+	 * This will retrieve the Module for the section id and assignment id
+	 * 
+	 * @param sectionId Section id
+	 * @param assignmentId Assignment id
+	 * @return Module object
+	 */
+	@Transactional(readOnly = true, propagation = Propagation.SUPPORTS, rollbackFor = Exception.class)
+	Module getModuleForSectionAssignment(Long sectionId, Long assignmentId) throws ConnectSystemException;
+
+	/**
+	 * This will retrieve the Module in a section by type of module (default|System|Custom)
+	 * 
+	 * @param sectionId Section id
+	 * @param type Type of section
+	 * @return Module object
+	 */
+	@Transactional(readOnly = true, propagation = Propagation.SUPPORTS, rollbackFor = Exception.class)
+	Module getModuleInSectionByType(Long sectionId, String type) throws ConnectSystemException;
+
+	/**
+	 * This will retrieve the assignment details like weight, number of questions, activity etc from assignment
+	 * 
+	 * @param assignmentId Assignment id
+	 * @param sectionId Section id
+	 * @return AssignmentDetailsHeader object
+	 */
+	@Transactional(readOnly = true, propagation = Propagation.SUPPORTS, rollbackFor = Exception.class)
+	AssignmentDetailsHeader getAssignmentDetailsHeader(Long assignmentId, Long sectionId)
+			throws ConnectSystemException;
+
+	/**
+	 * This will return the sync status of the assignment
+	 * 
+	 * @param assignmentId Assignment id
+	 * @return Synchronization status for assignment
+	 * @throws ConnectSystemException
+	 */
+	@Transactional(readOnly = true, propagation = Propagation.SUPPORTS, rollbackFor = Exception.class)
+	String getSyncStatusForAssignment(long assignmentId) throws ConnectSystemException;
+
+	/**
+	 * This will delete the policies related to the assignment category
+	 * 
+	 * @param assignmentID Assignment id
+	 * @throws ConnectSystemException
+	 */
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+	void deleteAssignmentCategoryPolicies(long assignmentID) throws ConnectSystemException;
+
+	/**
+	 * This will delete the category policies for the assignment in a section for an user
+	 * 
+	 * @param assignmentID Assignment id
+	 * @param sectionId Section id
+	 * @param userId User id
+	 * @throws ConnectSystemException
+	 */
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+	void deleteAssignmentCategoryPolicies(long assignmentID, long sectionId, String userId)
+			throws ConnectSystemException;
+
+	/**
+	 * This will associate the assignment to the passed modules
+	 * 
+	 * @param assignmentId Assignment id
+	 * @param moduleIds Array of module ids
+	 * @throws ConnectSystemException
+	 */
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+	void addAssignmentToModules(long assignmentId, long[] moduleIds) throws ConnectSystemException;
+
+	/**
+	 * Method to check whether the instructor is primary or secondary
+	 * 
+	 * @param userId User id
+	 * @param sectionId Section id
+	 * @return instructor role
+	 * @throws ConnectSystemException
+	 */
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+	String getInstructorRole(String userId, long sectionId) throws ConnectSystemException;
+
+	/**
+	 * Method to get activities for the given assignment id
+	 * 
+	 * @param assignmentId Assignment id
+	 * @return Array of activities (Activity[])
+	 * @throws ConnectSystemException
+	 */
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+	Activity[] getActivitiesForAssignment(long assignmentId) throws ConnectSystemException;
+
+	/**
+	 * Method to check whether the assignment is active or not for the given activity id
+	 * 
+	 * @param activityId Activity id
+	 * @return boolean 'true' if assignment is active. Otherwise returns 'false'.
+	 * @throws ConnectSystemException
+	 */
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+	boolean isAssignmentActive(long activityId) throws ConnectSystemException;
+
+	/**
+	 * Method to get writing type assignment for the given assignment id and section id
+	 * 
+	 * @param assignmentId Assignment id
+	 * @param sectionId Section id
+	 * @return an Assignment object for the given assignment id and section id
+	 * @throws ConnectSystemException
+	 */
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+	Assignment getWritingTypeAssignment(long assignmentId, long sectionId) throws ConnectSystemException;
+
+	/**
+	 * Method to update assignment status for the given assignment id and status
+	 * 
+	 * @param assignmentId Assignment id
+	 * @param status Assignment status
+	 * @throws ConnectSystemException
+	 */
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+	void updateAssignmentStatus(long assignmentId, String status) throws ConnectSystemException;
+
+	/**
+	 * Method to update assignment status for the given assignment id, section id and status
+	 * 
+	 * @param assignmentId Assignment id
+	 * @param sectionId Section id
+	 * @param status Assignment status
+	 * @throws ConnectSystemException
+	 */
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+	void updateAssignmentStatus(long assignmentId, long sectionId, String status) throws ConnectSystemException;
+
+	/**
+	 * Method to check whether there are any activity scores for the given activity id
+	 * 
+	 * @param activityID Activity id
+	 * @return boolean 'true' if activity score exists. Otherwise returns 'false'.
+	 */
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+	boolean getNumActivityScoresForActivity(long activityID);
+
+	/**
+	 * Method to create a writing type assignment
+	 * 
+	 * @param assignment Assignment object
+	 * @param sectionId Section id
+	 * @param moduleId Module id
+	 * @return a newly created assignment id
+	 * @throws ConnectSystemException
+	 */
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+	long createWritingTypeAssignment(Assignment assignment, long sectionId, long moduleId)
+			throws ConnectSystemException;
+
+	/**
+	 * Method to share assignment with provided sections (add new record into section_assignment_xref table)
+	 * 
+	 * @param assignmentID Assignment id
+	 * @param sectionID Section id
+	 */
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+	void insertAssignmentIdIntoSectionAssignmentXref(long assignmentID, long[] sectionID);
+
+	/**
+	 * Method to save assignment policies by exchange key
+	 * 
+	 * @param activity Activity object
+	 * @param assignmentID Assignment id
+	 * @return new activity id
+	 */
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+	long addActivityToAssignment(Activity activity, long assignmentID);
+
+	/**
+	 * Method to save assignment policies by exchange key
+	 * 
+	 * @param policies HMAssignmentCategoryPolicy object
+	 * @param sectionId Section id
+	 * @param userId User id
+	 * @return boolean 'true' if save is success. Otherwise returns 'false'.
+	 * @throws ConnectSystemException
+	 */
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+	boolean saveAssignmentPoliciesByExchaneKey(HMAssignmentCategoryPolicy policies, long sectionId, String userId)
+			throws ConnectSystemException;
+
+	/**
+	 * Method to get section assignment privilege for user
+	 * 
+	 * @param assignmentId Assignment id
+	 * @param currentSectionID Current section id
+	 * @param currentUserId Current user id
+	 * @return PrivilegePolicy object
+	 */
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+	PrivilegePolicy getSectionAssignmentPrivilegeForuser(long assignmentId, long currentSectionID, String currentUserId);
+
+	/**
+	 * Method to get student activity for writing assignment
+	 * 
+	 * @param assignmentId Assignment id
+	 * @param sectionId Section id
+	 * @return map of sorted student activities (SortedMap<Student, String>)
+	 * @throws ConnectSystemException
+	 */
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+	SortedMap<Student, String> getStudentActivityForWritingAssignment(long assignmentId, long sectionId)
+			throws ConnectSystemException;
+
+	/**
+	 * Method to get assignment status
+	 * 
+	 * @param valueObj Assignment object
+	 * @return boolean 'true' if assignment is active. Otherwise returns 'false'
+	 * @throws ConnectSystemException
+	 */
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+	boolean getAssignmentStatus(Assignment valueObj) throws ConnectSystemException;
+
+	/**
+	 * Method to get assignment active status for the given assignment id
+	 * 
+	 * @param assignmentId Assignment id
+	 * @return boolean 'true' if assignment is active. Otherwise returns 'false'
+	 * @throws ConnectSystemException
+	 */
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+	boolean getAssignmentActiveStatus(Long assignmentId) throws ConnectSystemException;
+
+	/**
+	 * Method to get shared sections with privilege for the given assignment id
+	 * 
+	 * @param assignmentId Assignment id
+	 * @return a list of shared sections (List<Section>)
+	 * @throws ConnectSystemException
+	 */
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+	List<Section> getSharedSectionsWithPrivilegeForAssignment(long assignmentId) throws ConnectSystemException;
+
+	/**
+	 * Gets all linked assignments for the specified assignment
+	 * 
+	 * @param aID
+	 * @return
+	 */
+	@Transactional(readOnly = true, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+	long[] getLinkedAssignmentIds(long aID);
+
+	/**
+	 * This API will fetch the AssignmentType for a given Assignment Id
+	 */
+	@Transactional(readOnly = true, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+	AssignmentType getAssignmentType(long aID) throws InvalidAssignmentTypeException;
+
+	/**
+	 * @param assignmentId
+	 * @return
+	 */
+	@Transactional(readOnly = true, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+	Assignment getAssignmentCategoryInfo(long assignmentId);
+
+	@Transactional(readOnly = true, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+	void updateAssignmentTitle(long aID, String title);
+
+	@Transactional(readOnly = true, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+	void updateAssignmentTitleAndStatus(long aID, String title, String status);
+
+	@Transactional(readOnly = true, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+	void updateAssignmentsStatus(long[] assignments, String status);
+
+	@Transactional(readOnly = true, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+	Assignment[] getAssignmentsBySectionID(long sectionID);
+
+	/**
+	 * This api will return the userId with their attempts left for the assignments.
+	 * @param userId
+	 * @param assignmentId
+	 * @param sectionId
+	 * @return
+	 */
+	@Transactional(readOnly = true, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+	ArrayList<HashMap> checkAttemptsLeft(String userId, String assignmentId, String sectionId);
+
+	/**
+	 * Method to return assignment start date for the given assignment id and section id
+	 * 
+	 * @param assignmentId Assignment id
+	 * @param sectionId Section id
+	 * @return assignment start date
+	 * @throws ConnectSystemException
+	 * @throws ConnectApplicationException
+	 */
+	@Transactional(readOnly = true, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+	Date getAssignmentStartDate(String assignmentId, String sectionId) throws ConnectSystemException,
+			ConnectApplicationException;
+
+	boolean hasNonAutoGradableItems(long sectionId, String userID, long assignmentId, long attemptNumber);
+
+	int getPublishedAssignmentsCount(long sectionID);
+
+	/**
+	 * Method to get the assignment for the given assignment id with correct weightage
+	 * @param assignmentId
+	 * @param sectionId
+	 * @return
+	 * @throws ConnectSystemException
+	 */
+	@Transactional(readOnly = true, propagation = Propagation.SUPPORTS, rollbackFor = Exception.class)
+	Assignment getAssignmentWithWeightById(Long assignmentId, Long sectionId) throws ConnectSystemException;
+
+	/**
+	 * 
+	 * @param sectionId
+	 * @param courseTimezone
+	 * @return
+	 * @throws ConnectSystemException
+	 */
+	@Transactional(readOnly = true, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+	public GroupAssignment[] getGroupAssignmentsWithRosterUpdates(long sectionId, String courseTimezone) throws ConnectSystemException;
+
+	/**
+	 * 
+	 * @param sectionId
+	 * @param courseTimeZone
+	 * @return
+	 * @throws ConnectSystemException
+	 */
+	@Transactional(readOnly = true, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+	Map<String, StudentActivityInfo> getPartiallyCompletedAssignmentsForSection(long sectionId, String courseTimeZone) throws ConnectSystemException;
+
+	/**
+	 * This method updates the assignment with force grading
+	 * @param assignmentId
+	 * @param activityNativeAlaId
+	 * @return
+	 */
+	int updateForceGradeWithNativeAlaId(long assignmentId, String nativeAlaId);
+
+	/**
+	 * This methos updates the Sync status for registarion for an assignment
+	 * 
+	 * @param assignmentId
+	 * @param syncStatusDone
+	 */
+	void updateSyncStatusWithRowLockForRegistration(long assignmentId, String syncStatusDone);
+
+	/**
+	 * This method returns the course ISBN for assignment
+	 * @param assignmentId
+	 * @return
+	 */
+	String getCourseIsbn(long assignmentId);
+
+	/**
+	 * This method deletes the assignment policies
+	 * @param assignmentId
+	 * @param policyList
+	 * @param sectionId
+	 */
+	void deleteAssignmentPolicies(final long assignmentId, final List<HomeworkManagerPolicy> policyList, final long sectionId);
+
+	/**
+	 * This method updates the last updated date for an assignment
+	 * @param assignmentID
+	 */
+	public void updateAssignmentUpdatedDate(long assignmentID);
+
+	public String displayScoreForAssignment(long sectionId, long assignmentId);
+
+	public AdditionalResponseMaterial[] getAdditionalResponseMaterialForResponseUsingResponseId(long responseId);
+
+	public List<AssignmentResourceAdapter> getAllAssignmentDetailsForBlackBoardInASection(long sectionId);
+
+	public AssignmentResourceAdapter getAssignmentResourceAdapterForMiddleware(long assignmentId, long sectionId) throws DataStoreException;
+
+	public void updateStudentFlagFromGroupAssignmmentsInSection(String[] userIds, long sectionId, boolean deleteFlag);
+
+	public SectionAssignmentLineItemActivity getSectionAssignmentLineItemActivityForStudent(
+			long sectionId, long assignmentId, String userId,
+			boolean forceCreateNewActivity);
+
+	/***
+	 * 
+	 * 
+	 * @param sectionId
+	 * @param assignmentId
+	 * @param userId
+	 * @param draftNo
+	 * @param forceCreateNewActivity
+	 * @return SectionAssignmentLineItemActivity
+	 */
+
+	public void addUpdateStudentExtentionsForMultipleAssignments(long sectionId, List<Long> assignmentIdList, List<Long> userIdList,
+			HMAssignmentPolicyException policyException);
+
+	public void updateForceGradingStatusForAssignmentPolicyException(
+			long assignmentId, long sectionId, String studentId, String status);
+
+	public void updateGroupAssignmentProperties(GroupAssignment ga,
+			long sectionId);
+
+	boolean hasAutogradableQuestion(long courseId, long sectionId, long assignmentId, long studentId);
+
+	boolean isAssignmentShared(long assignmentId);
+
+	public Group getGroupById(long assignmentId, long sectionId, long groupId);
+
+	public Group[] getGroupsForAssignmentInSection(long assignmentId, long sectionId, boolean fillStudentNames);
+
+	public List getLinkedAssignment(long assignmentId, long sectionId);
+
+	/**
+	 * This method returns blog assignment classmate activity information (map of classmate id and ClassmatesActivityTO
+	 * object) for the given assignment id and section id.
+	 * 
+	 * @param assignmentId
+	 * @param sectionId
+	 * @return a map of classmate id and ClassmatesActivityTO object (Map<String, ClassmatesActivityTO>)
+	 */
+	Map<String, ClassmatesActivityTO> getClassmatesActivityForBlogAssignment(long assignmentId, long sectionId);
+
+	/**
+	 * This method returns discussion board assignment classmate activity information (map of classmate id and
+	 * ClassmatesActivityTO object) for the given assignment id and section id.
+	 * 
+	 * @param assignmentId
+	 * @param sectionId
+	 * @return a map of classmate id and ClassmatesActivityTO object (Map<String, ClassmatesActivityTO>)
+	 */
+	 Map<String, ClassmatesActivityTO> getClassmatesActivityForDiscussionBoardAssignment(long assignmentId, long sectionId);
+	 /**
+	  * This method updates an assignment with the modified assignment
+	  * @param  modifiedAssignment the assignment object which is modified
+	  * @return boolean true or false based on whether the assignment was updated
+	  */
+	 public boolean updateAssignment(Assignment modifiedAssignment);
+	 
+	 /**
+	  * This method updates the show/hide value of an assignment
+	  * @param assignmentId the assignment id to be updated
+	  * @param makeVisible true/false for visible/hidden respectively
+	  */
+	 public boolean updateAssignmentVisibility(long assignmentId, boolean makeVisible);
+
+	/**
+	 * This mehtod returns the due date extended assignments (for auto submit) for the given seconds which will be added
+	 * to the syatem date
+	 * 
+	 * @param second
+	 * @return
+	 */
+	List<ExpiredAssignmentVO> getDueDateExtendedAssignmentsForAutoSubmit(int second);
+
+	public void addAssignmentLineItemsToSection(AssignmentLineItem[] lineItems, long sectionId);
+
+	public void addGroupsForAssignment(GroupAssignment ga, long sectionId);
+
+	public void deleteExistingGroupsForAssignment(long assignmentId, long sectionId);
+	
+	public void updateIsRosterUpdatedFlag(long assignmentId, long sectionId);
+
+	public long addResponseDocToSectionAssignmentLineItemActivity(long secAssignLineItemActivityId, ResponseDocument responseDoc);
+
+	public void addStudentToGroupAssignmentsInSection(String userId, long sectionId);
+
+	public GroupAssignment getGroupAssignmentById(long assignmentId, long sectionId);
+
+	public GroupAssignment getGroupAssignmentById(long assignmentId, long sectionId, boolean fillStudentNames);
+
+	public GroupAssignment getGroupAssignment(long assignmentId, long sectionId);
+
+	public Date getAssignmentDueDate(String assignmentId, String sectionId);
+
+	public Assignment getAssignmentByAssignIdAndSecId(long aID, long sectionId);
+
+	public Assignment getAssignment(long aID);
+
+	/**
+	 * This method will return a list of content policies for the given assignment id and section id
+	 * 
+	 * @param assignmentId
+	 * @param sectionId
+	 * @return
+	 */
+	List<HomeworkManagerPolicy> getContentPolicyForAssignment(Long assignmentId, Long sectionId);
+
+	/**
+	 * Method to get assignments for auto submission
+	 * @param forceGradePollInterval
+	 * @return
+	 */
+	List<ExpiredAssignmentVO> getAssignmentsForAutoSubmission(int forceGradePollInterval);
+
+	public void deleteAdditionalResponseMaterialByResponseId(long responseId);
+
+	public boolean deleteAssignmentFromSectionAssignmentXref(long assignmentId);
+
+	public void deleteMultipleAssignments(long[] assignmentIds);
+
+	public void logIntoFaultTolerance(String userId, String requestType,
+			String faultTolerenceMessage);
+
+	/**
+	 * Method to get the Assignment policy Exceptions For students
+	 * @param assignmentId
+	 * @param sectionId
+	 * @param studentIds
+	 * @return
+	 */
+	public HMAssignmentPolicyException[] getAssignmentPolicyExceptionsForStudents(
+			long assignmentId, long sectionId, String[] studentIds);
+	
+	public Set<Long> getAllCompletedStudentsFromSAS(long assignmentId, long sectionId);
+
+	public void addStudentToPeerReviewAssignmentsInSection(String userId, long sectionId);
+	
+	List<AssignmentResourceAdapter> getAssignmentResourceAdapterForMiddleware(long assignmentId) throws DataStoreException;
+	
+	public HashMap getPartiallyCompletedAssignmentsForSectionModified(long sectionId, String courseTimeZone);
+	
+	List<String> getStudentsHavingExceptionsForForceGrading(Long assignmentId, Date duedate, List<Long> sectionIds);
+	
+	public ExpiredAssignmentVO readForceGradingQ(long assignmentId,long sectionId);
+	
+	public List<Assignment> getAssignments(List<Long> assignmentIds);
+	
+	public boolean shareAssignmentsToNewSections(List assignmentIds,List destinationSections,
+			String assigningSectionId,Map sectionAssignmentIdsMap, boolean insertAssignmentsInToModules);
+	
+	public Map<Long, StudentActivityInfo> getPartiallyCompletedLearnSmartAssignmentsForSection(final long sectionId, final String courseTimeZone);
+
+	/**
+	 * <p>
+	 *  adds student to the writing assignment
+	 * </p>
+	 * @param userId
+	 * @param sectionId
+	 */
+	public void addStudentToWritingAssignmentGroupsInSection(String userId, long sectionId);
+
+	
+	/**
+	 *  <p>
+	 *  gets default group for section
+	 * </p>
+	 * @param sectionId
+	 * @param noOfStudentPerGroup
+	 * @return
+	 */
+	public Group[] getDefaultGroupForSection(long sectionId, int noOfStudentPerGroup);
+
+}
+
+
