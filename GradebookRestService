@@ -1,0 +1,2386 @@
+/***
+ * $Source: /web/cvs/connect-suite/connect/connect-services/src/main/java/com/mhe/connect/services/gradebook/resource/
+ * GradebookRestService.java,v $ $Revision: 1.243 $ $Author: spanchami $ $Date: 2014/09/15 15:51:09 $ Copyright 2013 The
+ * McGraw-Hill Companies. All Rights Reserved
+ * 
+ * REVISION HISTORY ------------------------- $Log: GradebookRestService.java,v $
+ * REVISION HISTORY ------------------------- Revision 1.243  2014/09/15 15:51:09  spanchami
+ * REVISION HISTORY ------------------------- Fix for CONNECTF-172 and 240
+ * REVISION HISTORY -------------------------
+ * REVISION HISTORY ------------------------- Revision 1.242  2014/08/12 11:40:01  ssing
+ * REVISION HISTORY ------------------------- Gradebook Export MVC changes and Services/Dao refactoring
+ * REVISION HISTORY -------------------------
+ * REVISION HISTORY ------------------------- Revision 1.241  2014/06/25 11:41:39  shuklas
+ * REVISION HISTORY ------------------------- clean up of AssignmentReportsManager class
+ * REVISION HISTORY -------------------------
+ * REVISION HISTORY ------------------------- Revision 1.240  2014/06/20 15:51:22  mayankk
+ * REVISION HISTORY ------------------------- using genutil method for fail safe
+ * REVISION HISTORY -------------------------
+ * REVISION HISTORY ------------------------- Revision 1.239  2014/06/12 12:47:55  dpal
+ * REVISION HISTORY ------------------------- fixing null pointer exception
+ * REVISION HISTORY -------------------------
+ * REVISION HISTORY ------------------------- Revision 1.238  2014/06/11 06:48:28  dpal
+ * REVISION HISTORY ------------------------- fixing null pointer exception
+ * REVISION HISTORY -------------------------
+ * REVISION HISTORY ------------------------- Revision 1.237  2014/04/04 11:55:34  pvsure
+ * REVISION HISTORY ------------------------- log added
+ * REVISION HISTORY -------------------------
+ * REVISION HISTORY ------------------------- Revision 1.236  2014/03/25 14:43:57  mayankk
+ * REVISION HISTORY ------------------------- changing log level
+ * REVISION HISTORY -------------------------
+ * REVISION HISTORY ------------------------- Revision 1.235  2014/03/18 12:36:56  ssing
+ * REVISION HISTORY ------------------------- fix for 14871
+ * REVISION HISTORY -------------------------
+ * REVISION HISTORY ------------------------- Revision 1.233  2014/02/27 11:46:49  mayankk
+ * REVISION HISTORY ------------------------- QC 14624 and code refractor
+ * REVISION HISTORY -------------------------
+ * REVISION HISTORY ------------------------- Revision 1.232  2014/02/27 11:25:21  mayankk
+ * REVISION HISTORY ------------------------- QC 14624 and code refractor
+ * REVISION HISTORY -------------------------
+ * REVISION HISTORY ------------------------- Revision 1.231  2014/02/27 08:01:40  mayankk
+ * REVISION HISTORY ------------------------- QC #14467
+ * REVISION HISTORY -------------------------
+ * REVISION HISTORY ------------------------- Revision 1.230  2014/02/24 15:00:46  mayankk
+ * REVISION HISTORY ------------------------- adding logs
+ * REVISION HISTORY -------------------------
+ * REVISION HISTORY ------------------------- Revision 1.229  2014/02/24 13:44:35  mayankk
+ * REVISION HISTORY ------------------------- QC #14312
+ * REVISION HISTORY -------------------------
+ * REVISION HISTORY ------------------------- Revision 1.228  2014/02/24 12:55:25  pvsure
+ * REVISION HISTORY ------------------------- GB- sumo logic related changes
+ * REVISION HISTORY -------------------------
+ * REVISION HISTORY ------------------------- Revision 1.227  2014/02/21 07:47:58  mayankk
+ * REVISION HISTORY ------------------------- Using one email service from all over
+ * REVISION HISTORY -------------------------
+ * REVISION HISTORY ------------------------- Revision 1.226  2014/02/21 07:27:20  mayankk
+ * REVISION HISTORY ------------------------- Using one email service from all over
+ * REVISION HISTORY -------------------------
+ * REVISION HISTORY ------------------------- Revision 1.225  2014/02/17 10:48:42  mayankk
+ * REVISION HISTORY ------------------------- workmanager thread for email audit
+ * REVISION HISTORY -------------------------
+ * REVISION HISTORY ------------------------- Revision 1.224  2014/02/13 18:09:11  mayankk
+ * REVISION HISTORY ------------------------- removing autowiring and injecting through xml
+ * REVISION HISTORY -------------------------
+ * REVISION HISTORY ------------------------- Revision 1.223  2014/02/13 17:59:50  mayankk
+ * REVISION HISTORY ------------------------- removing autowiring and injecting through xml
+ * REVISION HISTORY -------------------------
+ * REVISION HISTORY ------------------------- Revision 1.222  2014/02/13 13:50:20  mayankk
+ * REVISION HISTORY ------------------------- considering copyToInstructor
+ * REVISION HISTORY -------------------------
+ * REVISION HISTORY ------------------------- Revision 1.221  2014/02/13 12:39:56  mayankk
+ * REVISION HISTORY ------------------------- connect email services and email auditing
+ * REVISION HISTORY -------------------------
+ * REVISION HISTORY ------------------------- Revision 1.220  2014/02/05 18:25:52  denisb
+ * REVISION HISTORY ------------------------- private static final Logger LOGGER -> private static Logger logger
+ * REVISION HISTORY -------------------------
+ * REVISION HISTORY ------------------------- Revision 1.219  2014/01/30 11:03:50  mayankk
+ * REVISION HISTORY ------------------------- Sonar violation fixes, string addition is removed from logging statements
+ * REVISION HISTORY -------------------------
+ * REVISION HISTORY ------------------------- Revision 1.218  2014/01/30 08:26:49  mayankk
+ * REVISION HISTORY ------------------------- Code clean up
+ * REVISION HISTORY -------------------------
+ * REVISION HISTORY ------------------------- Revision 1.217  2014/01/23 14:50:08  mayankk
+ * REVISION HISTORY ------------------------- Gradebook: student email functionality (changed datamodel)
+ * REVISION HISTORY -------------------------
+ * REVISION HISTORY ------------------------- Revision 1.216  2014/01/23 12:29:44  mayankk
+ * REVISION HISTORY ------------------------- Gradebook: student email functionality (changed datamodel)
+ * REVISION HISTORY -------------------------
+ * REVISION HISTORY ------------------------- Revision 1.215  2014/01/22 11:46:20  mayankk
+ * REVISION HISTORY ------------------------- Gradebook: student email functionality (testing few scenarios)
+ * REVISION HISTORY -------------------------
+ * REVISION HISTORY ------------------------- Revision 1.214  2014/01/22 08:50:27  mayankk
+ * REVISION HISTORY ------------------------- Gradebook: student email functionality (testing few scenarios)
+ * REVISION HISTORY -------------------------
+ * REVISION HISTORY ------------------------- Revision 1.213  2014/01/16 14:53:00  mayankk
+ * REVISION HISTORY ------------------------- Gradebook: student email functionality
+ * REVISION HISTORY -------------------------
+ * REVISION HISTORY ------------------------- Revision 1.212  2014/01/15 10:19:54  krisha
+ * REVISION HISTORY ------------------------- formatter applied
+ * REVISION HISTORY ------------------------- Revision 1.211 2014/01/14 13:42:49
+ * dpal Adding EmailService
+ * 
+ * Revision 1.210 2014/01/10 10:35:39 pvsure Q1 email functionality
+ * 
+ * Revision 1.209 2014/01/06 10:40:29 ssing renamed GradeBookManagementBusinessService to
+ * ConnectManagementBusinessService and dependent files
+ * 
+ * Revision 1.208 2013/12/10 12:06:32 pvsure fix for student report issue
+ * 
+ * Revision 1.207 2013/12/06 16:28:08 pvsure fix for 13838
+ * 
+ * Revision 1.206 2013/12/06 12:58:13 pvsure fix for 13296
+ * 
+ * Revision 1.205 2013/12/06 12:23:42 pvsure fix for 13838
+ * 
+ * Revision 1.204 2013/12/06 09:33:48 pvsure fix for 13838
+ * 
+ * Revision 1.203 2013/12/05 07:24:49 pvsure fix for 13705
+ * 
+ * Revision 1.202 2013/10/30 13:10:43 pvsure fix for 13271
+ * 
+ * Revision 1.201 2013/10/25 08:45:12 mayankk setting flag, if manual grading has been done for past due assignment
+ * 
+ * Revision 1.200 2013/10/03 11:39:31 pgoyal Gradebook R7B: Export Gradebook Report added flag for assignment presence
+ * 
+ * Revision 1.199 2013/09/27 10:15:05 sjacob GB audit field changes.
+ * 
+ * Revision 1.198 2013/09/23 09:50:20 pgoyal Gradebook R7B: Audit field changes for Gradebook
+ * 
+ * Revision 1.197 2013/09/23 06:57:27 pgoyal Gradebook R7B: Changes for audit field
+ * 
+ * Revision 1.196 2013/09/20 14:20:35 pvsure fix for sonar violation changes
+ * 
+ * Revision 1.195 2013/09/19 14:28:09 rbala Q3 : decimal format issue fixed
+ * 
+ * Revision 1.194 2013/09/19 11:11:32 dpal removing Sonar violations
+ * 
+ * Revision 1.193 2013/09/16 07:57:21 pvsure Q4 GB all category tot view changes
+ * 
+ * Revision 1.192 2013/09/04 12:09:51 rbala Q3 : assignment weight included for view in points user story
+ * 
+ * Revision 1.191 2013/08/29 13:46:50 graj Updating APIs for EPIC story: E-03858 Updated the flags, which are going to
+ * save in DB. Conversion of data, being sent from UI Changes by: Gaurav
+ * 
+ * Revision 1.190 2013/08/29 13:28:00 pgoyal Gradebook R7B: Single student prerequisite data call
+ * 
+ * Revision 1.189 2013/08/28 13:05:07 sjacob Back end changes to show points in gradebook.
+ * 
+ * Revision 1.188 2013/08/28 11:52:12 rbala Q3 : student card rest service removed from GB rest layer
+ * 
+ * Revision 1.187 2013/08/28 11:51:14 rbala Q3 : student card rest service removed from GB rest layer
+ * 
+ * Revision 1.186 2013/08/28 10:29:51 sjacob Back end changes to show points in gradebook.
+ * 
+ * Revision 1.185 2013/08/28 05:24:19 pgoyal Gradebook R7B: Gradebook in points student side change to accommodate
+ * points
+ * 
+ * Revision 1.184 2013/08/27 17:01:45 pgoyal Gradebook R7B: Gradebook student card changes
+ * 
+ * Revision 1.183 2013/08/27 09:32:36 pgoyal Gradebook R7B: Student card API changes
+ * 
+ * Revision 1.182 2013/08/27 09:14:24 pgoyal Gradebook R7B: GB points changes
+ * 
+ * Revision 1.181 2013/08/27 06:41:22 graj Updating APIs for EPIC story: E-03858 APIs for Get/Set GB point/percent
+ * option Changes by: Gaurav
+ * 
+ * Revision 1.180 2013/08/26 15:18:53 pgoyal Gradebook R7B: Added Rest API Implementation for grade display mode
+ * 
+ * Revision 1.179 2013/08/23 17:19:56 pvsure Q3 : - Due date surface changes
+ * 
+ * Revision 1.178 2013/08/23 16:44:34 pgoyal Gradebook R7B: Student card TO changes
+ * 
+ * Revision 1.177 2013/08/23 08:53:04 pgoyal Gradebook R7B: Non associable category changes
+ * 
+ * Revision 1.176 2013/08/23 08:33:26 graj Adding APIs for EPIC story: E-03858 APIs for Get/Set GB point/percent option
+ * Changes by: Gaurav
+ * 
+ * Revision 1.175 2013/08/22 17:37:00 pgoyal Gradebook R7B: Added student card Rest API with dummy data
+ * 
+ * Revision 1.174 2013/08/22 08:42:10 sjacob Changes to populate letter grades based on policy.
+ * 
+ * Revision 1.173 2013/08/21 18:06:55 pgoyal Gradebook R7B: Move assignment page re-factored API Implementation
+ * 
+ * Revision 1.172 2013/08/19 08:21:21 pgoyal Gradebook R7B: student gradebook report letter grade changes
+ * 
+ * Revision 1.171 2013/08/16 13:09:35 pgoyal Gradebook R7B: renaming student all category report TO parameter name
+ * 
+ * Revision 1.170 2013/08/16 12:35:05 pgoyal Gradebook R7B: renaming student all category report TO parameter name
+ * 
+ * Revision 1.169 2013/08/16 05:16:01 pgoyal Gradebook R7B: default letter grade REST URL change in impl
+ * 
+ * Revision 1.168 2013/08/13 15:21:31 rbala Suresh: Student GB report NON-Connect assignemnt type changes
+ * 
+ * Revision 1.167 2013/08/13 14:32:17 sjacob Letter grade specific changes in GB.
+ * 
+ * Revision 1.166 2013/08/13 07:07:10 pgoyal Gradebook R7B: empty value check
+ * 
+ * Revision 1.165 2013/08/13 04:48:38 pgoyal Gradebook R7B: Removed unnecessary import
+ * 
+ * Revision 1.164 2013/08/12 12:22:35 rbala Q3 : Non Connect assignments null pointer exception fixed
+ * 
+ * Revision 1.163 2013/08/08 13:00:05 rbala Suresh: Non connect assignment changes for displaying the assignments in the
+ * single category report.
+ * 
+ * Revision 1.162 2013/08/08 12:13:09 psingh GradeBook Q3 : Drop non connect assignment functionality.
+ * 
+ * Revision 1.161 2013/08/07 15:13:08 rbala Suresh: Non connect assignment update changes
+ * 
+ * Revision 1.160 2013/08/06 12:56:08 psingh GradeBook Q3 : Code review.
+ * 
+ * Revision 1.159 2013/08/06 10:48:33 rbala Suresh: Non connect assignment changes
+ * 
+ * Revision 1.158 2013/08/06 10:14:36 rgupta Suresh: Non connect assignment changes
+ * 
+ * Revision 1.157 2013/08/06 08:02:01 pgoyal Gradebook R7B: Rest API impl modification for save and update non connect
+ * assignment
+ * 
+ * Revision 1.156 2013/08/05 22:05:57 pgoyal Gradebook R7B: Rest Service Implementation for Non-connect Assignment
+ * saving and updating
+ * 
+ * Revision 1.155 2013/08/03 20:32:41 pgoyal Gradebook R7B: Added API Implementation for create GB page Rest based
+ * approach - fetching system default category
+ * 
+ * Revision 1.154 2013/08/03 09:02:12 pgoyal Gradebook R7B: Changes for supporting special characters in Student name
+ * for Gradebook report and extracted UTF_8 constant
+ * 
+ * Revision 1.153 2013/07/31 16:49:55 pgoyal Gradebook: Reverting Back the changes
+ * 
+ * Revision 1.151 2013/06/21 13:10:45 rbala Q2 : get preview URL performance improvement
+ * 
+ * Revision 1.150 2013/06/20 13:08:08 rbala Q2 : grade by participation performance improvement
+ * 
+ * Revision 1.149 2013/06/14 12:32:26 rgupta Suresh: Fix for #12135
+ * 
+ * Revision 1.148 2013/06/11 11:22:44 rgupta Suresh: Code Refactoring in the GB single student report.
+ * 
+ * Revision 1.147 2013/06/10 11:49:04 rgupta Suresh: Code Refactoring in the GB single category report.
+ * 
+ * Revision 1.146 2013/06/10 10:27:00 rgupta Suresh: Code Refactoring in the GB single category report. Moved the api
+ * call to fetch the MG assignment list inside the if block.
+ * 
+ * Revision 1.145 2013/06/07 13:48:52 pgoyal Gradebook: Changes for Single Student Pagination
+ * 
+ * Revision 1.144 2013/06/07 10:47:45 rbala Q2 : duplicate fetch gb settings removed
+ * 
+ * Revision 1.143 2013/06/03 14:14:16 pgoyal Sonar Fixes (Gautam Malik)
+ * 
+ * Revision 1.142 2013/05/27 13:17:52 rgupta Suresh: changes for GB all category page
+ * 
+ * Revision 1.141 2013/05/23 14:36:42 rgupta Suresh: Changes for QC#11564
+ * 
+ * Revision 1.140 2013/05/22 11:13:07 psingh Gradebook: Code review.
+ * 
+ ***/
+
+package imp.file;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+
+import javax.ws.rs.PathParam;
+
+import com.mhe.connect.business.common.Configuration;
+import com.mhe.connect.business.common.GenUtil;
+import com.mhe.connect.business.common.Logger;
+import com.mhe.connect.business.common.exceptions.SystemRuntimeException;
+import com.mhe.connect.business.common.valueobj.AssignmentType;
+import com.mhe.connect.business.course.service.api.ICourseManagementBusinessService;
+import com.mhe.connect.business.course.valueobj.Section;
+import com.mhe.connect.business.englishcomposition.service.api.IWritingAssignmentBusinessService;
+import com.mhe.connect.business.gradebook.service.api.IConnectGradebookBusinessService;
+import com.mhe.connect.business.gradebook.service.api.IConnectManagementBusinessService;
+import com.mhe.connect.business.gradebook.valueobj.Assignment;
+import com.mhe.connect.business.gradebook.valueobj.AssignmentOverrideScore;
+import com.mhe.connect.business.gradebook.valueobj.ConnectAssignmentCategoryType;
+import com.mhe.connect.business.gradebook.valueobj.ExpressGradeScore;
+import com.mhe.connect.business.gradebook.valueobj.GradeBookCategoryMoveAssignmentVO;
+import com.mhe.connect.business.gradebook.valueobj.GradeBookCategoryScoresResult;
+import com.mhe.connect.business.gradebook.valueobj.GradeBookExpressGradePolicyType;
+import com.mhe.connect.business.gradebook.valueobj.GradebookAssignmentGradeInfo;
+import com.mhe.connect.business.gradebook.valueobj.GradebookAssignmentInfo;
+import com.mhe.connect.business.gradebook.valueobj.GradebookAssignmentScore;
+import com.mhe.connect.business.gradebook.valueobj.GradebookCategory;
+import com.mhe.connect.business.gradebook.valueobj.GradebookScoreDisplayOptions;
+import com.mhe.connect.business.gradebook.valueobj.GradebookSettings;
+import com.mhe.connect.business.gradebook.valueobj.GradebookSingleCategoryInfo;
+import com.mhe.connect.business.gradebook.valueobj.LetterGradeSettings;
+import com.mhe.connect.business.gradebook.valueobj.NonConnectAssignmentDetails;
+import com.mhe.connect.business.gradebook.valueobj.NonConnectAssignmentVO;
+import com.mhe.connect.business.gradebook.valueobj.RosterInfo;
+import com.mhe.connect.business.gradebook.valueobj.SectionGradebookReportOptions;
+import com.mhe.connect.business.gradebook.valueobj.StudentGradeBookAssignmentScores;
+import com.mhe.connect.business.gradebook.valueobj.StudentGradeCategoryReportInfo;
+import com.mhe.connect.business.gradebook.valueobj.StudentGradeCategoryScore;
+import com.mhe.connect.business.instructorarea.service.api.IInstructorAreaManagementBusinessService;
+import com.mhe.connect.business.mail.vo.EmailMessageAuditVO;
+import com.mhe.connect.business.mail.vo.EmailMessageVO;
+import com.mhe.connect.business.reports.service.api.IAssignmentReportsManagementBusinessService;
+import com.mhe.connect.middleware.aspect.JobExecutor;
+import com.mhe.connect.services.email.ConnectEmailServiceHelper;
+import com.mhe.connect.services.email.IEmailService;
+import com.mhe.connect.services.gradebook.valueobj.AssignmentOverrideScoreTO;
+import com.mhe.connect.services.gradebook.valueobj.AuditFieldNames;
+import com.mhe.connect.services.gradebook.valueobj.CategoryAssignmentDetail;
+import com.mhe.connect.services.gradebook.valueobj.CategoryAssignmentTO;
+import com.mhe.connect.services.gradebook.valueobj.CategoryDetail;
+import com.mhe.connect.services.gradebook.valueobj.CategoryGradeDetail;
+import com.mhe.connect.services.gradebook.valueobj.CategoryStudentReportTO;
+import com.mhe.connect.services.gradebook.valueobj.CustomCategoryOverrideGradeTO;
+import com.mhe.connect.services.gradebook.valueobj.CustomCategoryOverrideScoreTO;
+import com.mhe.connect.services.gradebook.valueobj.GradeBookMoveAssignmentTO;
+import com.mhe.connect.services.gradebook.valueobj.GradeCategoryDetail;
+import com.mhe.connect.services.gradebook.valueobj.GradeDetail;
+import com.mhe.connect.services.gradebook.valueobj.GradeStatusAndGradeCategoryTO;
+import com.mhe.connect.services.gradebook.valueobj.GradebookAllCategoryReportTO;
+import com.mhe.connect.services.gradebook.valueobj.GradebookCategoryTO;
+import com.mhe.connect.services.gradebook.valueobj.GradebookDefaultLetterGradeTO;
+import com.mhe.connect.services.gradebook.valueobj.GradebookSectionTO;
+import com.mhe.connect.services.gradebook.valueobj.MoveAssignmentDetail;
+import com.mhe.connect.services.gradebook.valueobj.NonConnectAssignmentTO;
+import com.mhe.connect.services.gradebook.valueobj.SingleCategoryPrerequisiteDataTO;
+import com.mhe.connect.services.gradebook.valueobj.SingleStudentAssignmentReportTO;
+import com.mhe.connect.services.gradebook.valueobj.SingleStudentCategoryReportTO;
+import com.mhe.connect.services.gradebook.valueobj.SingleStudentPrerequisiteDataTO;
+import com.mhe.connect.services.gradebook.valueobj.StudentAssignmentDetail;
+import com.mhe.connect.services.gradebook.valueobj.StudentCategoryDetail;
+import com.mhe.connect.services.gradebook.valueobj.StudentCountTO;
+import com.mhe.connect.services.gradebook.valueobj.StudentGradebookAssignmentReportTO;
+import com.mhe.connect.services.gradebook.valueobj.StudentGradebookReportTO;
+import com.mhe.connect.services.gradebook.valueobj.SystemCategoryTO;
+import com.mhe.connect.services.restUtil.RestResponse;
+import com.mhe.connect.util.NumberUtils;
+import com.mhe.connect.util.ValidationUtils;
+
+public class GradebookRestService implements IGradebookRestService {
+
+	private static Logger logger = Logger.getInstance(GradebookRestService.class);
+
+	private static final String ATTEMPT_TO_RECORD = "attemptToRecord";
+	private static final String UTF_8 = "UTF-8";
+	private static final String EXP_GRADE_OPT_ONLY_SUBMITTED = "ONLY_SUBMITTED";
+	private static final String EXP_GRADE_OPT_ONLY_STARTED = "ONLY_STARTED";
+	private static final String EXP_GRADE_OPT_ALL_STUDENT = "ALL_STUDENT";
+	private static final int DEFAULT_EXPRESS_GRADE_SCORE = 100;
+	private IConnectManagementBusinessService gradeBookAPI;
+	private ICourseManagementBusinessService courseManagementBusinessService;
+	private IWritingAssignmentBusinessService writingAssignmentBusinessService;
+	private IInstructorAreaManagementBusinessService instructorAreaManagementBusinessService;
+	private IConnectGradebookBusinessService connectGradebookBusinessService;
+	private static final String SENDER = "connect-mail@mheducation.com";
+	private static final String ALL = "ALL";
+	private static final String SUCCESS = "SUCCESS";
+	private static final String FAILURE = "FAILURE";
+	private static final String GRADEBOOK = "GRADEBOOK";
+	private static final String GRADEBOOK_STUDENT_EMAIL_ENABLED = "GRADEBOOK_STUDENT_EMAIL_ENABLED";
+	private static final String SENDER_GRADEBOOK_STUDENT_EMAIL = "SENDER_GRADEBOOK_STUDENT_EMAIL";
+	private static final String EMPTY_STRING = "";
+	
+	private JobExecutor jobExecutor;
+	private IEmailService emailService;
+	private IAssignmentReportsManagementBusinessService	assignmentReportsManagementBusinessService;
+	
+	public IAssignmentReportsManagementBusinessService getAssignmentReportsManagementBusinessService() {
+		return assignmentReportsManagementBusinessService;
+	}
+
+	public void setAssignmentReportsManagementBusinessService(IAssignmentReportsManagementBusinessService assignmentReportsManagementBusinessService) {
+		this.assignmentReportsManagementBusinessService = assignmentReportsManagementBusinessService;
+	}
+	
+	public JobExecutor getJobExecutor() {
+		return jobExecutor;
+	}
+
+	public void setJobExecutor(JobExecutor jobExecutor) {
+		this.jobExecutor = jobExecutor;
+	}
+
+	public IEmailService getEmailService() {
+		return emailService;
+	}
+
+	public void setEmailService(IEmailService emailService) {
+		this.emailService = emailService;
+	}
+	ConnectEmailServiceHelper connectEmailServiceHelper;
+
+	public ConnectEmailServiceHelper getConnectEmailServiceHelper() {
+		return connectEmailServiceHelper;
+	}
+
+	public void setConnectEmailServiceHelper(ConnectEmailServiceHelper connectEmailServiceHelper) {
+		this.connectEmailServiceHelper = connectEmailServiceHelper;
+	}
+
+	public IConnectGradebookBusinessService getConnectGradebookBusinessService() {
+		return connectGradebookBusinessService;
+	}
+
+	public void setConnectGradebookBusinessService(
+			IConnectGradebookBusinessService connectGradebookBusinessService) {
+		this.connectGradebookBusinessService = connectGradebookBusinessService;
+	}
+
+	public IConnectManagementBusinessService getGradeBookAPI() {
+		return gradeBookAPI;
+	}
+
+	public void setGradeBookAPI(IConnectManagementBusinessService gradeBookAPI) {
+		this.gradeBookAPI = gradeBookAPI;
+	}
+
+	public ICourseManagementBusinessService getCourseManagementBusinessService() {
+		return courseManagementBusinessService;
+	}
+
+	public void setCourseManagementBusinessService(
+			ICourseManagementBusinessService courseManagementBusinessService) {
+		this.courseManagementBusinessService = courseManagementBusinessService;
+	}
+
+	public IWritingAssignmentBusinessService getWritingAssignmentBusinessService() {
+		return writingAssignmentBusinessService;
+	}
+
+	public void setWritingAssignmentBusinessService(IWritingAssignmentBusinessService writingAssignmentBusinessService) {
+		this.writingAssignmentBusinessService = writingAssignmentBusinessService;
+	}
+
+	public IInstructorAreaManagementBusinessService getInstructorAreaManagementBusinessService() {
+		return instructorAreaManagementBusinessService;
+	}
+
+	public void setInstructorAreaManagementBusinessService(
+			IInstructorAreaManagementBusinessService instructorAreaManagementBusinessService) {
+		this.instructorAreaManagementBusinessService = instructorAreaManagementBusinessService;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.mhe.connect.services.gradebook.resource.IGradebookRestService#getAllCategoryReport(java.lang.String,
+	 * java.lang.String, java.lang.String)
+	 */
+	@Override
+	public String getAllCategoryReport(String sectionId, String startIndex, String numberOfStudents) {
+
+		RestResponse restResponse = new RestResponse();
+
+		try {
+
+			List<GradebookAllCategoryReportTO> gradebookAllCategoryReportList = null;
+
+			logger.debug("Inside getAllCategoryReport, params sectionId={} startIndex={} numberOfStudents={}", new Object[]{sectionId,startIndex,numberOfStudents});
+
+			// Validating Arguments
+			if (GenUtil.isBlankString(sectionId) || GenUtil.isBlankString(startIndex) || GenUtil.isBlankString(numberOfStudents)) {
+				throw new IllegalArgumentException("Invalid Arguments Passed to API getAllCategoryReport()");
+			}
+
+			// Service API Call
+			SectionGradebookReportOptions sectionGradebookReportOptions = this.getConnectGradebookBusinessService().fetchGradebookSettingsForSection(
+					Long.parseLong(sectionId));
+			GradeBookCategoryScoresResult wrapperObj = new GradeBookCategoryScoresResult();
+			wrapperObj.setGradeReportOptions(sectionGradebookReportOptions);
+			wrapperObj.setSectionID(Long.parseLong(sectionId));
+			wrapperObj.setDataBeginIndex(Integer.parseInt(startIndex));
+			wrapperObj.setDataOffset(Integer.parseInt(numberOfStudents));
+			wrapperObj = this.getConnectGradebookBusinessService().getStudentCategoryScoresForSection(wrapperObj);
+
+			// Setting TO
+			gradebookAllCategoryReportList = new ArrayList<GradebookAllCategoryReportTO>();
+			List<StudentGradeCategoryReportInfo> studentGradeCategoryReportInfoList = wrapperObj.getStudentGradeScores();
+			for (StudentGradeCategoryReportInfo studentGradeCategoryReportInfo : studentGradeCategoryReportInfoList) {
+				GradebookAllCategoryReportTO gradebookAllCategoryReport = new GradebookAllCategoryReportTO();
+				gradebookAllCategoryReport.setStudentId(Long.parseLong(studentGradeCategoryReportInfo.getUserId()));
+				gradebookAllCategoryReport.setStudentName(URLEncoder.encode(studentGradeCategoryReportInfo.getStudentName(), UTF_8));
+				gradebookAllCategoryReport.setStudentNameByFirstNameLastName(URLEncoder.encode(studentGradeCategoryReportInfo.getFirstName()+" "+studentGradeCategoryReportInfo.getLastName(), UTF_8) );
+				gradebookAllCategoryReport.setStudentTotalGrade(NumberUtils.getFormattedDecimalValue(studentGradeCategoryReportInfo.getTotGrade(),
+						IConnectGradebookBusinessService.scaleValue));
+				if (studentGradeCategoryReportInfo.getLetterGrade() != null) {
+					gradebookAllCategoryReport.setStudentLetterGrade(URLEncoder.encode(studentGradeCategoryReportInfo.getLetterGrade(), UTF_8));
+				}
+
+				List<StudentGradeCategoryScore> studentGradeCategoryScoreList = studentGradeCategoryReportInfo.getStudentGradeCategoryScore();
+				List<CategoryGradeDetail> studentCategoryGradeDetailsList = new ArrayList<CategoryGradeDetail>();
+				for (StudentGradeCategoryScore studentGradeCategoryScore : studentGradeCategoryScoreList) {
+					CategoryGradeDetail categoryGradeDetail = new CategoryGradeDetail();
+					categoryGradeDetail.setCategoryId(studentGradeCategoryScore.getCategoryId());
+					categoryGradeDetail.setCategoryType(studentGradeCategoryScore.getCategoryType());
+					categoryGradeDetail.setCategoryScore(NumberUtils.getFormattedDecimalValue(studentGradeCategoryScore.getStudentCatScore(),
+							IConnectGradebookBusinessService.scaleValue));
+					// Setting the time spent value of a student in a specific category.
+					categoryGradeDetail.setTimeSpentIncategory(studentGradeCategoryScore.getStudentTimeSpentIncategory());
+
+					// Changes to calculate the time per student
+					categoryGradeDetail.setCategoryHasAssignments(studentGradeCategoryScore.hasAssignments());
+					// Filterring the not time categories.
+					if (studentGradeCategoryScore.getStudentTimeSpentIncategory() > 0 && gradebookAllCategoryReport.getStudentTotalTime() > 0) {
+						gradebookAllCategoryReport.setStudentTotalTime(gradebookAllCategoryReport.getStudentTotalTime()
+								+ studentGradeCategoryScore.getStudentTimeSpentIncategory());
+					} else if (studentGradeCategoryScore.getStudentTimeSpentIncategory() > 0) {
+						gradebookAllCategoryReport.setStudentTotalTime(studentGradeCategoryScore.getStudentTimeSpentIncategory());
+					}
+					studentCategoryGradeDetailsList.add(categoryGradeDetail);
+				}
+				gradebookAllCategoryReport.setStudentCategoryGradeDetails(studentCategoryGradeDetailsList);
+				gradebookAllCategoryReportList.add(gradebookAllCategoryReport);
+			}
+
+			restResponse.setResponse(gradebookAllCategoryReportList);
+		} catch (IllegalArgumentException e) {
+			logger.error("IllegalArgumentException Message :- " + e.getMessage(), e);
+			restResponse.setException(e);
+		} catch (Exception e) {
+			logger.error("Exception Message :- " + e.getMessage(), e);
+			restResponse.setException(e);
+		}
+
+		return restResponse.sendResponse();
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.mhe.connect.services.gradebook.resource.IGradebookRestService#getGradebookSettings(long)
+	 */
+	@Override
+	public SectionGradebookReportOptions getGradebookSettings(long sectionId) {
+		try {
+			logger.debug("gradebook api is : {} section ID : {}", new Object[]{this.getConnectGradebookBusinessService(), sectionId});
+			
+			SectionGradebookReportOptions gbSettings = this.getConnectGradebookBusinessService().fetchGradebookSettingsForSection(sectionId,
+					"MM/dd/yyyy hh:mm a");
+			for (GradebookCategory gbCat : gbSettings.getGradebookCategory()) {
+				gbCat.setName(URLEncoder.encode(gbCat.getName(), UTF_8));
+			}
+			for (LetterGradeSettings lgs : gbSettings.getLetterGradeSettings()) {
+				lgs.setLetterGrade(URLEncoder.encode(lgs.getLetterGrade(), UTF_8));
+			}
+
+			return gbSettings;
+		} catch (Exception e) {
+			logger.error("Exception in getSectionGradebookSettings ", e);
+			throw new SystemRuntimeException(e);
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * com.mhe.connect.services.gradebook.resource.IGradebookRestService#fetchAssignmentScoreDetails(java.lang.String,
+	 * java.lang.String, java.lang.String)
+	 */
+	@Override
+	public String fetchAssignmentScoreDetails(String sectionId, String studentId, String categoryId) {
+
+		RestResponse restResponse = new RestResponse();
+
+		try {
+
+			StudentGradebookAssignmentReportTO studentGradebookAssignmentReport = new StudentGradebookAssignmentReportTO();
+
+			// Validating Arguments
+			if (GenUtil.isBlankString(sectionId) || GenUtil.isBlankString(studentId) || GenUtil.isBlankString(categoryId)) {
+				throw new IllegalArgumentException("Invalid Arguments Passed to API fetchAssignmentScoreDetails()");
+			}
+
+			logger.debug("fetchAssignmentScoreDetails API called with following parameters sectionId:{}, studentId:{}, categoryId:{}",
+						new Object[] { sectionId, studentId, categoryId });
+			
+			StudentGradeBookAssignmentScores scores =
+					this.connectGradebookBusinessService.getAssignmentScoresForSingleStudent(Long.parseLong(sectionId), Long.parseLong(categoryId),
+							Long.parseLong(studentId));
+
+			// Iterate over Value object and update TO
+			studentGradebookAssignmentReport.setStudentAverageScore(scores.getAverageScore());
+			List<StudentAssignmentDetail> studentAssignmentDetailList = new ArrayList<StudentAssignmentDetail>();
+			List<Long> videoAssignmentIdList=new ArrayList<Long>();
+			List<Long> inprogressVideoAssignmentIds=new ArrayList<Long>();
+			for (GradebookAssignmentScore gradebookAssignmentScore : scores.getGradebookAssignmentScoreList()) {
+				if(gradebookAssignmentScore.getAssignmentType().equalsIgnoreCase(AssignmentType.VIDEO.toString())){
+					videoAssignmentIdList.add(gradebookAssignmentScore.getAssignmentId());
+				}
+			}
+			if(videoAssignmentIdList.size() > 0){
+				inprogressVideoAssignmentIds = connectGradebookBusinessService.getInprogressVideoAssignmentIds(Long.parseLong(sectionId), studentId, videoAssignmentIdList);
+			}
+			for (GradebookAssignmentScore gradebookAssignmentScore : scores.getGradebookAssignmentScoreList()) {
+				StudentAssignmentDetail studentAssignmentDetail = new StudentAssignmentDetail();
+				studentAssignmentDetail.setAssignmentName(URLEncoder.encode(gradebookAssignmentScore.getAssignmentName(), UTF_8));
+				studentAssignmentDetail.setAssignmentType(gradebookAssignmentScore.getAssignmentType());
+				studentAssignmentDetail.setAssignmentWeight(gradebookAssignmentScore.getAssignmentWeight());
+				studentAssignmentDetail.setAssignmentGradePercent(gradebookAssignmentScore.getTotalAssignmentGrade());
+				studentAssignmentDetail.setAssignmentGradePoint(gradebookAssignmentScore.getAssignmentGradePoint());
+				studentAssignmentDetail.setAssignmentDropped(gradebookAssignmentScore.isDropped());
+				if (inprogressVideoAssignmentIds.contains(gradebookAssignmentScore.getAssignmentId())) {
+					studentAssignmentDetail.setAssignmentReportUrl("");
+				} else {
+					studentAssignmentDetail.setAssignmentReportUrl(gradebookAssignmentScore.getReportUrl());
+				}
+				studentAssignmentDetail.setAssignmentPastDue(gradebookAssignmentScore.isAssignmentDueDatePassed());
+				studentAssignmentDetail.setNotYetGraded(gradebookAssignmentScore.isNotYetGraded());
+				studentAssignmentDetailList.add(studentAssignmentDetail);
+			}
+			studentGradebookAssignmentReport.setStudentAssignmentDetailList(studentAssignmentDetailList);
+
+			restResponse.setResponse(studentGradebookAssignmentReport);
+
+		} catch (Exception e) {
+			logger.error("Exception in fetchAssignmentScoredetails :- " + e.getMessage(), e);
+			restResponse.setException(e);
+		}
+
+		return restResponse.sendResponse();
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.mhe.connect.services.gradebook.resource.IGradebookRestService#getGradebookSections(java.lang.String,
+	 * java.lang.String, java.lang.String)
+	 */
+	@Override
+	public String getGradebookSections(String courseId, String userId, String role) throws Exception {
+
+		RestResponse restResponse = new RestResponse();
+
+		try {
+
+			List<GradebookSectionTO> gradebookSectionList = null;
+
+			logger.debug("Inside getGradebookSections, params courseId={} userId={} role={}", new Object[]{courseId, userId, role});
+
+			// Validating Arguments
+			if (GenUtil.isBlankString(courseId) || GenUtil.isBlankString(userId) || GenUtil.isBlankString(role)) {
+				throw new IllegalArgumentException("Invalid Arguments Passed to API getGradebookSections()");
+			}
+
+			// Fetch sections from Service layer and validate it
+			List<Section> sections = this.getGradeBookAPI().getSectionsInCourse(Long.parseLong(courseId), userId, role);
+			if (sections == null || sections.isEmpty()) {
+				throw new Exception("Unable to fetch section details in API getGradebookSections()");
+			}
+
+			// Prepare response in SectionDetailTO
+			gradebookSectionList = new ArrayList<GradebookSectionTO>();
+			for (Section section : sections) {
+				GradebookSectionTO gradebookSectionTO = new GradebookSectionTO();
+				gradebookSectionTO.setSectionId(section.getID());
+				gradebookSectionTO.setSectionName(URLEncoder.encode(section.getName(), UTF_8));
+				gradebookSectionList.add(gradebookSectionTO);
+			}
+
+			restResponse.setResponse(gradebookSectionList);
+
+		} catch (IllegalArgumentException e) {
+			logger.error("IllegalArgumentException Message :- " + e.getMessage(), e);
+			restResponse.setException(e);
+		} catch (Exception e) {
+			logger.error("Exception Message :- " + e.getMessage(), e);
+			restResponse.setException(e);
+		}
+
+		return restResponse.sendResponse();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.mhe.connect.services.gradebook.resource.IGradebookRestService#getGradebookCategories(java.lang.String)
+	 */
+	@Override
+	public String getGradebookCategories(String sectionId) throws Exception {
+
+		RestResponse restResponse = new RestResponse();
+
+		try {
+
+			List<GradebookCategoryTO> gradebookCategoryList = null;
+
+			logger.debug("Inside getGradebookCategories, params sectionId=", sectionId);
+
+			// Validating Arguments
+			if (GenUtil.isBlankString(sectionId)) {
+				throw new IllegalArgumentException("Invalid Arguments Passed to API getGradebookCategories()");
+			}
+
+			// Fetch categories info from Service layer and validate it
+			SectionGradebookReportOptions sectionGradebookReportOptions = this.getConnectGradebookBusinessService().fetchGradebookSettingsForSection(
+					Long.parseLong(sectionId));
+
+			if (sectionGradebookReportOptions == null) {
+				throw new Exception("Unable to fetch sectionGradebookReportOptions in API getGradebookSections()");
+			}
+			List<GradebookCategory> gradebookCategories = sectionGradebookReportOptions.getGradebookCategory();
+			if (gradebookCategories == null || gradebookCategories.isEmpty()) {
+				throw new Exception("Unable to fetch gradebookCategory in API getGradebookSections()");
+			}
+
+			// Prepare response in SectionDetailTO
+			gradebookCategoryList = new ArrayList<GradebookCategoryTO>();
+			for (GradebookCategory gradebookCategory : gradebookCategories) {
+				if (gradebookCategory.getWeight() > 0) {
+					GradebookCategoryTO gradebookCategoryTO = new GradebookCategoryTO();
+					gradebookCategoryTO.setCategoryId(gradebookCategory.getCategoryId());
+					gradebookCategoryTO.setCategoryName(URLEncoder.encode(gradebookCategory.getName(), UTF_8));
+					gradebookCategoryTO.setCategoryType(gradebookCategory.getType());
+					gradebookCategoryTO.setCategoryWeight(gradebookCategory.getWeight());
+					gradebookCategoryTO.setCategoryDropLowestScore(gradebookCategory.getLowestScoresDropCount());
+					gradebookCategoryTO.setCategoryAssociable(!gradebookCategory.hasCustomCategoryScore());
+					gradebookCategoryTO.setCategoryHasAssignments(gradebookCategory.hasAssignments());
+					gradebookCategoryList.add(gradebookCategoryTO);
+				}
+			}
+
+			restResponse.setResponse(gradebookCategoryList);
+		} catch (IllegalArgumentException e) {
+			logger.error("IllegalArgumentException Message :- " + e.getMessage(), e);
+			restResponse.setException(e);
+		} catch (Exception e) {
+			logger.error("Exception Message :- " + e.getMessage(), e);
+			restResponse.setException(e);
+		}
+
+		return restResponse.sendResponse();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.mhe.connect.services.gradebook.resource.IGradebookRestService#getGradingStatusMessage(java.lang.String)
+	 */
+	@Override
+	public String getGradingStatusAndGradeCategory(String courseId, String sectionId) throws Exception {
+
+		RestResponse restResponse = new RestResponse();
+
+		GradeStatusAndGradeCategoryTO gradeStatusAndGradeCategory = new GradeStatusAndGradeCategoryTO();
+		List<GradeCategoryDetail> gradeCategoryDetail = null;
+		try {
+
+			logger.debug("Inside getGradingStatusMessage, params courseId={}, sectionId={}", new Object[]{courseId, sectionId});
+
+			// Validating Arguments
+			if (GenUtil.isBlankString(courseId) || GenUtil.isBlankString(sectionId)) {
+				throw new IllegalArgumentException("Invalid Arguments Passed to API getGradingStatusMessage()");
+			}
+			Map<Long, String> categoryNames = this.gradeBookAPI.getCategoryNamesForManualGradingAssignments(Long.parseLong(courseId), Long
+					.parseLong(sectionId));
+			
+			logger.debug("result size : {}", categoryNames.size());
+			
+			if (categoryNames == null || categoryNames.isEmpty()) {
+				gradeCategoryDetail = new ArrayList<GradeCategoryDetail>(1);
+
+			} else {
+
+				Set<Map.Entry<Long, String>> resultMap = categoryNames.entrySet();
+				Iterator<Map.Entry<Long, String>> resultIterator = resultMap.iterator();
+				gradeCategoryDetail = new ArrayList<GradeCategoryDetail>(resultMap.size() + 1);
+				while (resultIterator.hasNext()) {
+					GradeCategoryDetail gradeDetail = new GradeCategoryDetail();
+					Map.Entry<Long, String> entry = resultIterator.next();
+					gradeDetail.setCategoryId(entry.getKey());
+					gradeDetail.setCategoryName(URLEncoder.encode(entry.getValue(), UTF_8));
+					gradeCategoryDetail.add(gradeDetail);
+				}
+			}
+
+			gradeStatusAndGradeCategory.setGradeCategoryDetail(gradeCategoryDetail);
+			restResponse.setResponse(gradeStatusAndGradeCategory);
+
+		} catch (IllegalArgumentException e) {
+			logger.error("IllegalArgumentException Message :- " + e.getMessage(), e);
+			restResponse.setException(e);
+		} catch (Exception e) {
+			logger.error("Exception Message :- " + e.getMessage(), e);
+			restResponse.setException(e);
+		}
+		return restResponse.sendResponse();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.mhe.connect.services.gradebook.resource.IGradebookRestService#getCategoryAssignments(java.lang.String,
+	 * java.lang.String)
+	 */
+	@Override
+	public String getCategoryAssignments(String courseId, String sectionId, String categoryId) throws Exception {
+
+		RestResponse restResponse = new RestResponse();
+
+		try {
+			long courseIdLong = Long.parseLong(courseId);
+			final String courseTimeZone = courseManagementBusinessService.getCourseTimezone(courseIdLong);
+			
+			CategoryAssignmentTO categoryAssignmentTO = new CategoryAssignmentTO();
+
+			logger.debug("Inside getCategoryAssignments, params sectionId={} categoryId={} courseId={} ", new Object[]{sectionId, categoryId, courseId});
+
+			// Validating Arguments
+			if (GenUtil.isBlankString(courseId) || GenUtil.isBlankString(sectionId) || GenUtil.isBlankString(categoryId)) {
+				throw new IllegalArgumentException("Invalid Arguments Passed to API getCategoryAssignments()");
+			}
+
+		 	
+			List<GradebookAssignmentInfo> assignmentlist = this.getConnectGradebookBusinessService()
+								.getGradebookAssignmentsbyCategory(Long.parseLong(sectionId), Long.parseLong(categoryId),courseTimeZone);
+
+			if (assignmentlist == null) {
+				throw new Exception("Unable to fetch assignmentlist in API getCategoryAssignments()");
+			}
+
+			List<Long> assignmentIdLst = new ArrayList<Long>();
+			List<Long> manualGradableAssignmentListIds = new ArrayList<Long>();
+
+			for (GradebookAssignmentInfo gradebookAssignmentInfo : assignmentlist) {
+				// Filtering out the nonconnect assignments as this list is using to the gradebyparticipation,
+				// previewurl and manualgradable assignnments
+				if (!gradebookAssignmentInfo.getAssignmentType().equalsIgnoreCase(AssignmentType.NONCONNECT.toString())) {
+					assignmentIdLst.add(gradebookAssignmentInfo.getAssignmentId());
+				}
+
+			}
+			Map<Long, String> listOfPreviewUrl = new HashMap<Long, String>();
+			if (!assignmentIdLst.isEmpty()) {
+				listOfPreviewUrl = this.getConnectGradebookBusinessService().getPreviewUrlMap(assignmentIdLst, sectionId, Long.parseLong(categoryId));
+				// Retrieving manualy gradable assignmnets
+			}
+
+			Map<Long, Boolean> assignmentMap = new HashMap<Long, Boolean>();
+			assignmentMap = this.getConnectGradebookBusinessService().hasGradebyParticipation(Long.parseLong(sectionId), Long.parseLong(categoryId));
+			manualGradableAssignmentListIds = this.getConnectGradebookBusinessService()
+					.retrieveAssignmentNamesForManualGrading(courseIdLong, Long.parseLong(sectionId), Long.parseLong(categoryId));
+
+			float categoryAssignmentTotalPoints = 0;
+			List<CategoryAssignmentDetail> categoryAssignmentDetailList = new LinkedList<CategoryAssignmentDetail>();
+			for (GradebookAssignmentInfo gradebookAssignment : assignmentlist) {
+				CategoryAssignmentDetail categoryAssignmentDetail = new CategoryAssignmentDetail();
+				categoryAssignmentDetail.setAssignmentId(gradebookAssignment.getAssignmentId());
+				categoryAssignmentDetail.setAssignmentType(gradebookAssignment.getAssignmentType());
+
+				if (manualGradableAssignmentListIds.contains(Long.valueOf(gradebookAssignment.getAssignmentId()))) {
+					categoryAssignmentDetail.setManualGradeRequired(true);// Set the Manual grade required flag
+				} else {
+					categoryAssignmentDetail.setManualGradeRequired(false);// Set the Manual grade required flag
+				}
+
+				boolean expressGradeEnabled =
+						(gradebookAssignment.getExpressGradeEnabled() == null || gradebookAssignment.getExpressGradeEnabled().equals("Y")) ? true
+								: false;
+				categoryAssignmentDetail.setExpressGradeEnabled(expressGradeEnabled);
+				categoryAssignmentDetail.setAssignmentExpressGraded(gradebookAssignment.isAssignmentExpressGraded());
+				if (logger.isDebugEnabled()) {
+					logger.debug("setting express grade enabled to  " + expressGradeEnabled + "  for assignment "
+							+ gradebookAssignment.getAssignmentTitle());
+				}
+				categoryAssignmentDetail.setAssignmentTitle(URLEncoder.encode(gradebookAssignment.getAssignmentTitle(), UTF_8));
+				if (!assignmentMap.isEmpty()
+						&& assignmentMap.containsKey(gradebookAssignment.getAssignmentId())
+						&& assignmentMap.get(gradebookAssignment.getAssignmentId())) {
+					categoryAssignmentDetail.setGradeByCompletion(true);
+				}
+				categoryAssignmentDetail.setAssignmentPoints(NumberUtils.getFormattedDecimalValue(gradebookAssignment.getAssignmentPoints(),
+						IConnectGradebookBusinessService.scaleValue));
+				categoryAssignmentDetail.setPreviewUrl(listOfPreviewUrl.get(gradebookAssignment.getAssignmentId()));
+				// populate the assignment duedate.
+				categoryAssignmentDetail.setAssignmentDueDate(gradebookAssignment.getAssignmentDuedate());
+
+				categoryAssignmentTotalPoints = categoryAssignmentTotalPoints + gradebookAssignment.getAssignmentPoints();
+
+				categoryAssignmentDetailList.add(categoryAssignmentDetail);
+			}
+			categoryAssignmentTO.setCategoryAssignmentDetails(categoryAssignmentDetailList);
+
+			categoryAssignmentTO.setCategoryAssignmentTotalPoints(NumberUtils.getFormattedDecimalValue(categoryAssignmentTotalPoints,
+					IConnectGradebookBusinessService.scaleValue));
+
+			restResponse.setResponse(categoryAssignmentTO);
+
+		} catch (IllegalArgumentException e) {
+			logger.error("IllegalArgumentException Message :- " + e.getMessage(), e);
+			restResponse.setException(e);
+		} catch (Exception e) {
+			logger.error("Exception Message :- " + e.getMessage(), e);
+			restResponse.setException(e);
+		}
+
+		return restResponse.sendResponse();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.mhe.connect.services.gradebook.resource. IGradebookRestService#getSingleCategoryReport(java.lang.String,
+	 * java.lang.String, java.lang.String, java.lang.String)
+	 */
+	@Override
+	public String getSingleCategoryReport(String courseId, String sectionId, String categoryId,
+			String startIndex, String numberOfStudents) throws Exception {
+
+		RestResponse restResponse = new RestResponse();
+
+		try {
+			long sectionIdLong = Long.parseLong(sectionId);
+			List<CategoryStudentReportTO> categoryStudentReportList = null;
+
+			logger.debug("Inside getSingleCategoryReport, params sectionId={} categoryId={} startIndex={} numberOfStudents={}", new Object[]{sectionId, categoryId, startIndex, numberOfStudents});
+
+			// Validating Arguments
+			if (GenUtil.isBlankString(courseId) || GenUtil.isBlankString(sectionId) || GenUtil.isBlankString(categoryId) ||
+					GenUtil.isBlankString(startIndex) || GenUtil.isBlankString(numberOfStudents)) {
+				throw new IllegalArgumentException("Invalid Arguments Passed to API getSingleCategoryReport()");
+			}
+
+			Map<String, Object> category = this.getConnectGradebookBusinessService().getGradebookCategory(sectionIdLong,
+					Long.parseLong(categoryId));
+			String categoryType = category.get("TYPE").toString();
+			int assignmentCount = Integer.parseInt(category.get("ASSIGNMENTCNT").toString());
+			List<GradebookSingleCategoryInfo> studentScoreGrid = null;
+
+			// Fetch category report info from Service layer and validate it
+			GradeBookCategoryScoresResult assignmentScoresResult = new GradeBookCategoryScoresResult();
+			assignmentScoresResult.setSectionID(Long.parseLong(sectionId));
+			assignmentScoresResult.setDataBeginIndex(Integer.parseInt(startIndex));
+			assignmentScoresResult.setDataOffset(Integer.parseInt(numberOfStudents));
+			assignmentScoresResult.setGradeReportOptions(this.getConnectGradebookBusinessService().fetchGradebookSettingsForSection(sectionIdLong));
+			if ("user".equalsIgnoreCase(categoryType) && assignmentCount == 0) {
+				studentScoreGrid = this.getConnectGradebookBusinessService().getStudentCustomCategoryScores(assignmentScoresResult,
+						Long.parseLong(categoryId));
+			} else {
+
+				// Fetch category assignment info from Service layer and validate it
+				studentScoreGrid = this.getConnectGradebookBusinessService()
+						.getStudentCategoryScores(assignmentScoresResult, Long.parseLong(categoryId));
+			}
+
+			if (studentScoreGrid == null) {
+				throw new Exception("Unable to fetch studentScoreGrid in API getSingleCategoryReport()");
+			}
+
+			categoryStudentReportList = new LinkedList<CategoryStudentReportTO>();
+			for (GradebookSingleCategoryInfo studentScore : studentScoreGrid) {
+				CategoryStudentReportTO categoryStudentReportTO = new CategoryStudentReportTO();
+				categoryStudentReportTO.setStudentId(studentScore.getStudentId());
+				categoryStudentReportTO.setStudentName(URLEncoder.encode((studentScore.getLastName() + ", " + studentScore.getFirstName()), UTF_8));
+				categoryStudentReportTO.setStudentNameByFirstNameLastName(URLEncoder.encode((studentScore.getFirstName() + ", " + studentScore.getLastName()), UTF_8));
+				// Change to fix the TOT issues
+				categoryStudentReportTO.setStudentTotalTime(studentScore.getTotalTime());
+				List<GradeDetail> gradeDetailList = new LinkedList<GradeDetail>();
+
+				if (studentScore.getAssignmentLst() != null) {
+					for (GradebookAssignmentGradeInfo assGradeDetail : studentScore.getAssignmentLst()) {
+						GradeDetail gradeDetail = new GradeDetail();
+						gradeDetail.setAssignmentId(assGradeDetail.getAssignmentId());
+						gradeDetail.setAssignmentGradePercent(NumberUtils.getFormattedDecimalValue(assGradeDetail.getAssignmentGradePercent(),
+								IConnectGradebookBusinessService.scaleValue));
+						gradeDetail.setAssignmentGradePoints(NumberUtils.getFormattedDecimalValue(assGradeDetail.getAssignmentGradePoint(),
+								IConnectGradebookBusinessService.scaleValue));
+						gradeDetail.setExpressGraded(assGradeDetail.isExpressGrade());
+						gradeDetail.setDropped(assGradeDetail.isDropped());
+						gradeDetailList.add(gradeDetail);
+					}
+					categoryStudentReportTO.setStudentGradeDetails(gradeDetailList);
+				}
+
+				categoryStudentReportTO.setStudentCategoryGrade(studentScore.getTotalGrade());
+
+				categoryStudentReportList.add(categoryStudentReportTO);
+			}
+
+			restResponse.setResponse(categoryStudentReportList);
+
+		} catch (IllegalArgumentException e) {
+			logger.error("IllegalArgumentException Message :- " + e.getMessage(), e);
+			restResponse.setException(e);
+		} catch (Exception e) {
+			logger.error("Exception Message :- " + e.getMessage(), e);
+			restResponse.setException(e);
+		}
+
+		return restResponse.sendResponse();
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * com.mhe.connect.services.gradebook.resource.IGradebookRestService#saveAssignmentOverrideScore(java.lang.String,
+	 * java.lang.String, com.mhe.connect.services.gradebook.valueobj.AssignmentOverrideScoreTO[], java.lang.String)
+	 */
+	@Override
+	public String saveAssignmentOverrideScore(String sectionId, String gradeDisplayMode, AssignmentOverrideScoreTO[] assignmentOverrideScoreTOArray,
+			String auditField) {
+
+		RestResponse restResponse = new RestResponse();
+
+		try {
+
+			logger.debug("Inside saveAssignmentOverrideScore, params sectionId={}, auditField={}.", new Object[]{sectionId,auditField});
+
+			// Validating Arguments
+			if (GenUtil.isBlankString(sectionId) || assignmentOverrideScoreTOArray == null || assignmentOverrideScoreTOArray.length == 0
+					|| GenUtil.isBlankString(gradeDisplayMode) || GenUtil.isBlankString(auditField)) {
+				throw new IllegalArgumentException("Invalid Arguments Passed to API saveAssignmentOverrideScore()");
+			}
+
+			// Get Audit data map
+			Map<String, String> auditFieldMap = this.getAuditField(auditField);
+			String userId = auditFieldMap.get(AuditFieldNames.USERID.getValue());
+
+			List<AssignmentOverrideScore> assignmentOverrideScoreList = new ArrayList<AssignmentOverrideScore>();
+
+			// prepare object to send for back-end update
+			for (AssignmentOverrideScoreTO assignmentOverrideScoreTO : assignmentOverrideScoreTOArray) {
+				AssignmentOverrideScore assignmentOverrideScore = new AssignmentOverrideScore();
+				assignmentOverrideScore.setSectionId(Long.parseLong(sectionId));
+				assignmentOverrideScore.setAssignmentId(assignmentOverrideScoreTO.getAssignmentId());
+				assignmentOverrideScore.setUserId(Long.toString(assignmentOverrideScoreTO.getStudentId()));
+				assignmentOverrideScore.setInstructorOverrideScore(assignmentOverrideScoreTO.getInstructorOverrideScore());
+				assignmentOverrideScore.setCreatedOrModifiedBy(Long.parseLong(userId));
+				assignmentOverrideScoreList.add(assignmentOverrideScore);
+			}
+
+			// call back-end API
+			this.getConnectGradebookBusinessService().saveAssignmentOverrideScores(assignmentOverrideScoreList, gradeDisplayMode);
+
+			// Set Response
+			restResponse.setResponse(true);
+
+		} catch (IllegalArgumentException e) {
+			restResponse.setResponse(false);
+			logger.error("IllegalArgumentException Message :- " + e.getMessage(), e);
+		} catch (Exception e) {
+			restResponse.setResponse(false);
+			logger.error("Exception Message :- " + e.getMessage(), e);
+		}
+
+		return restResponse.sendResponse();
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * com.mhe.connect.services.gradebook.resource.IGradebookRestService#saveCustomCategoryOverrideScore(java.lang.String
+	 * , java.lang.String, com.mhe.connect.services.gradebook.valueobj.CustomCategoryOverrideScoreTO[],
+	 * java.lang.String) //TODO:Need to remove this service and use the generic restservice mention below. public String
+	 * saveCustomCategoriesOverrideScore(String sectionId, CustomCategoryOverrideGradeTO[]
+	 * customCategoryOverrideGradeTOArray)
+	 */
+	@Override
+	public boolean saveCustomCategoryOverrideScore(String sectionId, String categoryId,
+					CustomCategoryOverrideScoreTO[] customCategoryOverrideScoreTOArray, String auditField) throws Exception {
+
+		boolean flag = false;
+
+		try {
+
+			logger.debug("Inside saveCustomCategoryOverrideScore, params sectionId={} , categoryId={}", new Object[]{ sectionId, categoryId});
+
+			// Validating Arguments
+			if (GenUtil.isBlankString(sectionId) || GenUtil.isBlankString(categoryId) ||
+					customCategoryOverrideScoreTOArray == null || customCategoryOverrideScoreTOArray.length == 0 || GenUtil.isBlankString(auditField)) {
+				throw new IllegalArgumentException("Invalid Arguments Passed to API saveCustomCategoryOverrideScore()");
+			}
+
+			// Get Audit data map
+			Map<String, String> auditFieldMap = this.getAuditField(auditField);
+			String userId = auditFieldMap.get(AuditFieldNames.USERID.getValue());
+
+			List<StudentGradeCategoryReportInfo> studentGradeCategoryReportInfoList = new ArrayList<StudentGradeCategoryReportInfo>();
+
+			StudentGradeCategoryReportInfo studentGradeCategoryReportInfo = null;
+			StudentGradeCategoryScore studentGradeCategoryScore = null;
+			// prepare object to send for back-end update
+			for (CustomCategoryOverrideScoreTO customCategoryOverrideScoreTO : customCategoryOverrideScoreTOArray) {
+				studentGradeCategoryReportInfo = new StudentGradeCategoryReportInfo();
+				studentGradeCategoryScore = new StudentGradeCategoryScore();
+				studentGradeCategoryScore.setUserId(customCategoryOverrideScoreTO.getStudentId());
+				studentGradeCategoryReportInfo.setUserId(Long.toString(customCategoryOverrideScoreTO.getStudentId()));
+				studentGradeCategoryScore.setCategoryId(Long.parseLong(categoryId));
+				studentGradeCategoryScore.setSectionId(Long.parseLong(sectionId));
+				studentGradeCategoryScore.setStudentCatScore(customCategoryOverrideScoreTO.getInstructorOverrideScore());
+				studentGradeCategoryReportInfo.addCategoryScore(studentGradeCategoryScore);
+				studentGradeCategoryReportInfo.setCreatedOrModifiedBy(Long.parseLong(userId));
+				studentGradeCategoryReportInfoList.add(studentGradeCategoryReportInfo);
+			}
+
+			if (!studentGradeCategoryReportInfoList.isEmpty()) {
+				flag = this.getConnectGradebookBusinessService().saveCustomGradeGategoryScore(studentGradeCategoryReportInfoList, sectionId);
+			}
+
+		} catch (IllegalArgumentException e) {
+			flag = false;
+			logger.error("IllegalArgumentException Message :- " + e.getMessage(), e);
+			throw new Exception(e);
+		} catch (Exception e) {
+			flag = false;
+			logger.error("Exception Message :- " + e.getMessage(), e);
+			throw new Exception(e);
+		}
+
+		return flag;
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * com.mhe.connect.services.gradebook.resource.IGradebookRestService#saveCustomCategoryOverrideGrade(java.lang.String
+	 * , java.lang.String, com.mhe.connect.services.gradebook.valueobj.CustomCategoryOverrideGradeTO[],
+	 * java.lang.String) //TODO:Need to remove this service and use the generic restservice mention below. public String
+	 * saveCustomCategoriesOverrideScore(String sectionId, CustomCategoryOverrideGradeTO[]
+	 * customCategoryOverrideGradeTOArray)
+	 */
+	@Override
+	public boolean saveCustomCategoryOverrideGrade(String sectionId, String studentId,
+			CustomCategoryOverrideGradeTO[] customCategoryOverrideGradeTOArray, String auditField) throws Exception {
+
+		boolean flag = false;
+
+		try {
+
+			logger.debug("Inside saveCustomCategoryOverrideGrade, params sectionId={} , studentId={}", new Object[]{sectionId, studentId});
+
+			// Validating Arguments
+			if (GenUtil.isBlankString(sectionId) || GenUtil.isBlankString(studentId) ||
+					customCategoryOverrideGradeTOArray == null || customCategoryOverrideGradeTOArray.length == 0 || GenUtil.isBlankString(auditField)) {
+				throw new IllegalArgumentException("Invalid Arguments Passed to API saveCustomCategoryOverrideScore()");
+			}
+
+			// Get Audit data map
+			Map<String, String> auditFieldMap = this.getAuditField(auditField);
+			String userId = auditFieldMap.get(AuditFieldNames.USERID.getValue());
+
+			// Business logic
+			List<StudentGradeCategoryReportInfo> studentGradeCategoryReportInfoList = new ArrayList<StudentGradeCategoryReportInfo>();
+
+			StudentGradeCategoryReportInfo studentGradeCategoryReportInfo = null;
+			StudentGradeCategoryScore studentGradeCategoryScore = null;
+			// prepare object to send for back-end update
+			for (CustomCategoryOverrideGradeTO customCategoryOverrideGradeTO : customCategoryOverrideGradeTOArray) {
+				studentGradeCategoryReportInfo = new StudentGradeCategoryReportInfo();
+				studentGradeCategoryScore = new StudentGradeCategoryScore();
+				studentGradeCategoryScore.setUserId(Long.parseLong(studentId));
+				studentGradeCategoryReportInfo.setUserId(studentId);
+				studentGradeCategoryScore.setCategoryId(customCategoryOverrideGradeTO.getCategoryId());
+				studentGradeCategoryScore.setSectionId(Long.parseLong(sectionId));
+				studentGradeCategoryScore.setStudentCatScore(customCategoryOverrideGradeTO.getInstructorOverrideScore());
+				studentGradeCategoryReportInfo.addCategoryScore(studentGradeCategoryScore);
+				studentGradeCategoryReportInfo.setCreatedOrModifiedBy(Long.parseLong(userId));
+				studentGradeCategoryReportInfoList.add(studentGradeCategoryReportInfo);
+			}
+
+			if (!studentGradeCategoryReportInfoList.isEmpty()) {
+				flag = this.getConnectGradebookBusinessService().saveCustomGradeGategoryScore(studentGradeCategoryReportInfoList, sectionId);
+			}
+
+		} catch (IllegalArgumentException e) {
+			flag = false;
+			logger.error("IllegalArgumentException Message :- " + e.getMessage(), e);
+			throw new Exception(e);
+		} catch (Exception e) {
+			flag = false;
+			logger.error("Exception Message :- " + e.getMessage(), e);
+			throw new Exception(e);
+		}
+
+		return flag;
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.mhe.connect.services.gradebook.resource.IGradebookRestService#saveExpressGradeDetails(java.lang.String,
+	 * java.lang.String, java.lang.String, java.lang.String)
+	 */
+	@Override
+	public boolean saveExpressGradeDetails(String sectionId, String assignmentId, String expressGradeOption, String auditField) throws Exception {
+
+		boolean flag = true;
+
+		try {
+
+			if (logger.isDebugEnabled()) {
+				logger
+						.debug("Inside saveExpressGradeDetails, params sectionId="
+								+ sectionId
+								+ ", assignmentId="
+								+ assignmentId
+								+ ", expressGradeOption=" + expressGradeOption);
+			}
+			// Validating Arguments
+			if (GenUtil.isBlankString(sectionId) || GenUtil.isBlankString(assignmentId) || GenUtil.isBlankString(expressGradeOption) || GenUtil.isBlankString(auditField)) {
+				throw new IllegalArgumentException("Invalid Arguments Passed to API saveExpressGradeDetails()");
+			}
+
+			// Get Audit data map
+			Map<String, String> auditFieldMap = this.getAuditField(auditField);
+			String userId = auditFieldMap.get(AuditFieldNames.USERID.getValue());
+
+			// call to backend API for saving express grade settings
+			List<ExpressGradeScore> expressGradeScoreList = new ArrayList<ExpressGradeScore>();
+			ExpressGradeScore expressGradeScore = new ExpressGradeScore();
+			expressGradeScore.setSectionId(Long.parseLong(sectionId));
+			expressGradeScore.setAssignmentId(Long.parseLong(assignmentId));
+			expressGradeScore.setScore(DEFAULT_EXPRESS_GRADE_SCORE);
+			expressGradeScore.setCreatedOrModifiedBy(Long.parseLong(userId));
+			expressGradeScoreList.add(expressGradeScore);
+
+			GradeBookExpressGradePolicyType gradeBookExpressGradePolicyType = null;
+
+			if (EXP_GRADE_OPT_ALL_STUDENT.equalsIgnoreCase(expressGradeOption)) {
+				gradeBookExpressGradePolicyType = GradeBookExpressGradePolicyType.ALL_STUDENTS;
+			} else if (EXP_GRADE_OPT_ONLY_STARTED.equalsIgnoreCase(expressGradeOption)) {
+				gradeBookExpressGradePolicyType = GradeBookExpressGradePolicyType.STUDENTS_STARTED_ASSIGNMENT;
+			} else if (EXP_GRADE_OPT_ONLY_SUBMITTED.equalsIgnoreCase(expressGradeOption)) {
+				gradeBookExpressGradePolicyType = GradeBookExpressGradePolicyType.STUDENTS_SUBMITTED_ASSIGNMENT;
+			}
+
+			this.getConnectGradebookBusinessService()
+						.saveAssignmentExpressGradeScores(expressGradeScoreList, gradeBookExpressGradePolicyType);
+
+		} catch (IllegalArgumentException e) {
+			flag = false;
+			logger.error("IllegalArgumentException Message :- " + e.getMessage(), e);
+			throw new Exception(e);
+		} catch (Exception e) {
+			flag = false;
+			logger.error("Exception Message :- " + e.getMessage(), e);
+			throw new Exception(e);
+		}
+
+		return flag;
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * com.mhe.connect.services.gradebook.resource.IGradebookRestService#getGradebookMoveAssignmentDetails(java.lang
+	 * .String)
+	 */
+	@Override
+	public String getGradebookMoveAssignmentDetails(String sectionId) {
+
+		RestResponse restResponse = new RestResponse();
+
+		try {
+
+			// Validating Arguments
+			if (GenUtil.isBlankString(sectionId)) {
+				throw new IllegalArgumentException("Invalid Arguments Passed to API getGradebookMoveAssignmentDetails()");
+			}
+
+			// Logging input parameter in debug mode.
+			logger.debug("Inside getGradebookMoveAssignmentDetails, params sectionId={}", new Object[] { sectionId });
+			
+			// Service API call
+			List<GradeBookCategoryMoveAssignmentVO> gradeBookCategoryMoveAssignmentVOList = connectGradebookBusinessService
+					.getAssignmentsGroupAlongWithGradeBookCategory(Long.parseLong(sectionId));
+
+			// Set data in TO
+			List<GradeBookMoveAssignmentTO> gradeBookMoveAssignmentTOList = new ArrayList<GradeBookMoveAssignmentTO>();
+			for (GradeBookCategoryMoveAssignmentVO gradeBookCategoryMoveAssignmentVO : gradeBookCategoryMoveAssignmentVOList) {
+
+				GradeBookMoveAssignmentTO gradeBookMoveAssignmentTO = new GradeBookMoveAssignmentTO();
+
+				gradeBookMoveAssignmentTO.setCategoryId(gradeBookCategoryMoveAssignmentVO.getGbCategoryId());
+				gradeBookMoveAssignmentTO.setCategoryName(URLEncoder.encode(gradeBookCategoryMoveAssignmentVO.getGbCategoryName(), UTF_8));
+				gradeBookMoveAssignmentTO.setCategoryWeight(gradeBookCategoryMoveAssignmentVO.getGbCategoryWeight());
+				gradeBookMoveAssignmentTO.setCategoryAssociable(gradeBookCategoryMoveAssignmentVO.isAssociable());
+
+				List<MoveAssignmentDetail> moveAssignmentDetailList = new ArrayList<MoveAssignmentDetail>();
+
+				if (gradeBookCategoryMoveAssignmentVO.getAssignmentList() != null && !gradeBookCategoryMoveAssignmentVO.getAssignmentList().isEmpty()) {
+					for (Assignment assignment : gradeBookCategoryMoveAssignmentVO.getAssignmentList()) {
+						MoveAssignmentDetail moveAssignmentDetail = new MoveAssignmentDetail();
+						moveAssignmentDetail.setAssignmentId(assignment.getID());
+						moveAssignmentDetail.setAssignmentTitle(URLEncoder.encode(assignment.getTitle(), UTF_8));
+						moveAssignmentDetailList.add(moveAssignmentDetail);
+					}
+				}
+
+				gradeBookMoveAssignmentTO.setMoveAssignmentDetailList(moveAssignmentDetailList);
+
+				gradeBookMoveAssignmentTOList.add(gradeBookMoveAssignmentTO);
+			}
+
+			// Wrap rest response
+			restResponse.setResponse(gradeBookMoveAssignmentTOList);
+		} catch (IllegalArgumentException e) {
+			logger.error("IllegalArgumentException Message :- " + e.getMessage(), e);
+			restResponse.setException(e);
+		} catch (Exception e) {
+			logger.error("Exception Message :- " + e.getMessage(), e);
+			restResponse.setException(e);
+		}
+
+		return restResponse.sendResponse();
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * com.mhe.connect.services.gradebook.resource.IGradebookRestService#updateGradebookCategoryForAssignments(java.
+	 * lang.String, java.lang.String, java.lang.Long[], java.lang.String)
+	 */
+	@Override
+	public boolean updateGradebookCategoryForAssignments(String sectionId, String categoryId, Long[] assignmentIds, String auditField)
+			throws Exception {
+
+		if (assignmentIds == null || assignmentIds.length == 0 || GenUtil.isBlankString(auditField)) {
+			throw new IllegalArgumentException("Invalid Arguments Passed to API updateGradebookCategoryForAssignments()");
+		}
+
+		// Get Audit data map
+		Map<String, String> auditFieldMap = this.getAuditField(auditField);
+		String userId = auditFieldMap.get(AuditFieldNames.USERID.getValue());
+
+		boolean flag = false;
+
+		try {
+			GradebookCategory gradebookCategory = new GradebookCategory();
+			gradebookCategory.setCategoryId(Long.valueOf(categoryId));
+			gradebookCategory.setSectionId(Long.valueOf(sectionId));
+			gradebookCategory.setCreatedOrModifiedBy(Long.parseLong(userId));
+			List<Long> assignmentIdList = Arrays.asList(assignmentIds);
+			connectGradebookBusinessService.updateGradebookCategoryForAssignments(gradebookCategory, assignmentIdList);
+			flag = true;
+		} catch (IllegalArgumentException e) {
+			logger.error("IllegalArgumentException Message :- " + e.getMessage(), e);
+			throw new Exception(e);
+		} catch (Exception e) {
+			logger.error("Exception Message :- " + e.getMessage(), e);
+			throw new Exception(e);
+		}
+
+		return flag;
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * com.mhe.connect.services.gradebook.resource.IGradebookRestService#getSingleStudentCategoryReport(java.lang.String
+	 * , java.lang.String, java.lang.String)
+	 */
+	@Override
+	public SingleStudentCategoryReportTO getSingleStudentCategoryReport(
+			String courseId, String sectionId, String studentId)
+			throws Exception {
+
+		logger.debug("Inside getSingleStudentCategoryReport, params courseId={}, sectionId={}, studentId={}", new Object[]{courseId,sectionId,studentId});
+
+		// Validating Arguments
+		if (GenUtil.isBlankString(courseId) || GenUtil.isBlankString(sectionId) || GenUtil.isBlankString(studentId)) {
+			throw new IllegalArgumentException("Invalid Arguments Passed to API getSingleStudentCategoryReport()");
+		}
+
+		SingleStudentCategoryReportTO singleStudentCategoryReportTO = new SingleStudentCategoryReportTO();
+
+		try {
+
+			RosterInfo rosterInfo = this.getCourseManagementBusinessService().getRosterInfo(Long.parseLong(sectionId), Long.parseLong(studentId));
+
+			logger.debug("Getting the viewtype from the gradebook settings.");
+			// Reading the viewtype from the Gradebook settings only
+
+			singleStudentCategoryReportTO.setStudentId(rosterInfo.getuserId());
+			singleStudentCategoryReportTO.setStudentName(URLEncoder.encode((rosterInfo.getlastName() + ", " + rosterInfo.getfirstName()), UTF_8));
+
+			SectionGradebookReportOptions sectionGradebookReportOptions = this.getConnectGradebookBusinessService().fetchGradebookSettingsForSection(
+					Long.parseLong(sectionId));
+			GradeBookCategoryScoresResult wrapperObj = new GradeBookCategoryScoresResult();
+			wrapperObj.setGradeReportOptions(sectionGradebookReportOptions);
+			wrapperObj.setSectionID(Long.parseLong(sectionId));
+			// Start: Logic to fetch the viewtype from the gradebook settings.
+			List<GradebookSettings> addGradeList = sectionGradebookReportOptions.getGradebookSettings();
+			GradebookSettings addGradeObj = null;
+			for (Iterator<GradebookSettings> i = addGradeList.iterator(); i.hasNext();) {
+				addGradeObj = (GradebookSettings) i.next();
+				if (ATTEMPT_TO_RECORD.equalsIgnoreCase(addGradeObj.getName())) {
+					wrapperObj.setAttemptType(addGradeObj.getValue());
+					break;
+				}
+			}
+			// End
+
+			singleStudentCategoryReportTO.setTotalAssignments(this.getConnectGradebookBusinessService().getTotalNoAssignments(
+					Long.parseLong(sectionId)));
+
+			try {
+				wrapperObj = this.getConnectGradebookBusinessService().getStudentGradeCategoryReportInfo(wrapperObj, studentId);
+				StudentGradeCategoryReportInfo studGradeCatReportInfo = wrapperObj.getStudentGradeScores().get(0);
+				singleStudentCategoryReportTO.setStudentTotalGrade(studGradeCatReportInfo.getTotGrade());
+				if (studGradeCatReportInfo.getLetterGrade() != null) {
+					singleStudentCategoryReportTO.setStudentLetterGrade(URLEncoder.encode(studGradeCatReportInfo.getLetterGrade(), UTF_8));
+				}
+				for (StudentGradeCategoryScore categoryScore : studGradeCatReportInfo.getStudentGradeCategoryScore()) {
+					CategoryDetail categoryDetail = new CategoryDetail();
+					categoryDetail.setCategoryId(categoryScore.getCategoryId());
+					categoryDetail.setCategoryName(categoryScore.getCategoryName());
+					categoryDetail.setCategoryType(categoryScore.getCategoryType());
+					categoryDetail.setCategoryGradePercent(NumberUtils.getFormattedDecimalValue(categoryScore.getStudentCatScore(),
+							IConnectGradebookBusinessService.scaleValue));
+					categoryDetail.setCategoryTotalPoint(NumberUtils.getFormattedDecimalValue(categoryScore.getAssignmentsTotalWeight(),
+							IConnectGradebookBusinessService.scaleValue));
+					categoryDetail.setCategoryGradePoint(NumberUtils.getFormattedDecimalValue(categoryScore.getStudentCatPoint(),
+							IConnectGradebookBusinessService.scaleValue));
+					categoryDetail.setHasAssignments(categoryScore.hasAssignments());
+					singleStudentCategoryReportTO.getStudentCategoryDetails().add(categoryDetail);
+				}
+
+			} catch (Exception e) {
+				logger.error(e);
+			}
+
+		} catch (IllegalArgumentException e) {
+			logger.error("IllegalArgumentException Message :- " + e.getMessage(), e);
+			throw new Exception(e);
+		} catch (Exception e) {
+			logger.error("Exception Message :- " + e.getMessage(), e);
+			throw new Exception(e);
+		}
+
+		return singleStudentCategoryReportTO;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * com.mhe.connect.services.gradebook.resource.IGradebookRestService#getSingleStudentAssignmentReport(java.lang.
+	 * String, java.lang.String, java.lang.String, java.lang.String)
+	 */
+	@Override
+	public List<SingleStudentAssignmentReportTO> getSingleStudentAssignmentReport(
+			String sectionId, String studentId, String studentName) throws Exception {
+
+		logger.debug("Inside getSingleStudentAssignmentReport, params sectionId={}, studentId={}, studentName={}", new Object[]{sectionId, studentId, studentName});
+
+		// Validating Arguments
+		if (GenUtil.isBlankString(sectionId) || GenUtil.isBlankString(studentId) || GenUtil.isBlankString(studentName)) {
+			throw new IllegalArgumentException("Invalid Arguments Passed to API getSingleStudentAssignmentReport()");
+		}
+
+		List<SingleStudentAssignmentReportTO> singleStudentAssignmentReportTOList = new ArrayList<SingleStudentAssignmentReportTO>();
+
+		try {
+
+			// Service layer call goes here
+
+			List<GradebookAssignmentGradeInfo> singleStudentMatrics = this.getConnectGradebookBusinessService().getSingleStudentMatric(sectionId,
+					studentId);
+
+			Map<Long, Boolean> assignmentMap = this.getConnectGradebookBusinessService().hasGradebyParticipation(Long.parseLong(sectionId), 0l);
+			List<Long> videoAssignmentIdList=new ArrayList<Long>();
+			List<Long> inprogressVideoAssignmentIds=new ArrayList<Long>();
+			for (GradebookAssignmentGradeInfo gradebookAssignmentGradeInfo : singleStudentMatrics) {
+				if(gradebookAssignmentGradeInfo.getAssignmentType().equalsIgnoreCase(AssignmentType.VIDEO.toString())){
+					videoAssignmentIdList.add(gradebookAssignmentGradeInfo.getAssignmentId());
+				}
+			}
+			if(videoAssignmentIdList.size()>0){
+				inprogressVideoAssignmentIds = connectGradebookBusinessService.getInprogressVideoAssignmentIds(Long.parseLong(sectionId), studentId, videoAssignmentIdList);
+			}
+			String reportUrl = "";
+			for (GradebookAssignmentGradeInfo gradebookAssignmentGradeInfo : singleStudentMatrics) {
+				SingleStudentAssignmentReportTO assignmentInfo = new SingleStudentAssignmentReportTO();
+				assignmentInfo.setAssignmentId(gradebookAssignmentGradeInfo.getAssignmentId());
+				assignmentInfo.setAssignmentTitle(URLEncoder.encode(gradebookAssignmentGradeInfo.getAssignmentTitle(), UTF_8));
+
+				reportUrl = ((gradebookAssignmentGradeInfo.getAttemptNo() > 0) && ((gradebookAssignmentGradeInfo
+						.getAssignmentType()
+						.equalsIgnoreCase(AssignmentType.ALE.toString())) ? ((gradebookAssignmentGradeInfo
+						.isManualGraded().equalsIgnoreCase("Y")) ? true : false)
+						: true)) ? this.getConnectGradebookBusinessService()
+						.constructReportUrl(
+								sectionId,
+								studentId,
+								studentName,
+								gradebookAssignmentGradeInfo.getAssignmentId(),
+								gradebookAssignmentGradeInfo
+										.getAssignmentType(),
+								gradebookAssignmentGradeInfo.getAttemptNo())
+						: "";
+							
+					if(inprogressVideoAssignmentIds.contains(gradebookAssignmentGradeInfo.getAssignmentId())){
+							reportUrl="";
+					}
+				assignmentInfo.setAssignmentWeight(NumberUtils.getFormattedDecimalValue(gradebookAssignmentGradeInfo.getAssignmentWeight(),
+						IConnectGradebookBusinessService.scaleValue));
+
+				if (!assignmentMap.isEmpty()
+						&& assignmentMap.containsKey(gradebookAssignmentGradeInfo.getAssignmentId())
+						&& assignmentMap.get(gradebookAssignmentGradeInfo.getAssignmentId())) {
+					assignmentInfo.setGradeByCompletion(true);
+				}
+
+				assignmentInfo.setAssignmentCategoryId(gradebookAssignmentGradeInfo.getCategoryId());
+				assignmentInfo.setExpressGraded(gradebookAssignmentGradeInfo.isExpressGrade());
+				assignmentInfo.setAssignmentGradePoint(NumberUtils.getFormattedDecimalValue(gradebookAssignmentGradeInfo.getAssignmentGradePoint(),
+						IConnectGradebookBusinessService.scaleValue));
+				assignmentInfo.setAssignmentGradePercent(NumberUtils.getFormattedDecimalValue(gradebookAssignmentGradeInfo
+						.getAssignmentGradePercent(), IConnectGradebookBusinessService.scaleValue));
+				assignmentInfo.setReportUrl(reportUrl);
+				assignmentInfo.setDropped(gradebookAssignmentGradeInfo.isDropped());
+				assignmentInfo.setAssignmentType(gradebookAssignmentGradeInfo.getAssignmentType());
+				assignmentInfo.setAssignmentTime(gradebookAssignmentGradeInfo.getTotalTime());
+				singleStudentAssignmentReportTOList.add(assignmentInfo);
+			}
+
+		} catch (IllegalArgumentException e) {
+			logger.error("IllegalArgumentException Message :- " + e.getMessage(), e);
+			throw new Exception(e);
+		} catch (Exception e) {
+			logger.error("Exception Message :- " + e.getMessage(), e);
+			throw new Exception(e);
+		}
+
+		return singleStudentAssignmentReportTOList;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.mhe.connect.services.gradebook.resource.IGradebookRestService#getGradingStudentCount(java.lang.String,
+	 * java.lang.String)
+	 */
+	@Override
+	public String getGradingStudentCount(String courseId, String sectionId) throws Exception {
+
+		RestResponse restResponse = new RestResponse();
+
+		try {
+
+			StudentCountTO studentCount = new StudentCountTO();
+
+			logger.debug("Inside getGradingStudentCount, params courseId={}, sectionId={}", new Object[]{courseId, sectionId});
+
+			// Validating Arguments
+			if (GenUtil.isBlankString(courseId) || GenUtil.isBlankString(sectionId)) {
+				throw new IllegalArgumentException("Invalid Arguments Passed to API getGradingStudentCount()");
+			}
+
+			// Fetch student count from service layer
+			int numberOfStudents = this.getConnectGradebookBusinessService().getStudentCount(Long.parseLong(sectionId));
+			studentCount.setStudentCount(numberOfStudents);
+
+			restResponse.setResponse(studentCount);
+
+		} catch (IllegalArgumentException e) {
+			logger.error("IllegalArgumentException Message :- " + e.getMessage(), e);
+			restResponse.setException(e);
+		} catch (Exception e) {
+			logger.error("Exception Message :- " + e.getMessage(), e);
+			restResponse.setException(e);
+		}
+
+		return restResponse.sendResponse();
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * com.mhe.connect.services.gradebook.resource.IGradebookRestService#saveDropAssignmentDetails(java.lang.String,
+	 * java.lang.String, java.lang.String, java.lang.String, java.lang.String)
+	 */
+	@Override
+	public boolean saveDropAssignmentDetails(String courseId, String sectionId, String assignmentId, String categoryId, String auditField)
+			throws Exception {
+		
+		if (GenUtil.isBlankString(categoryId) || GenUtil.isBlankString(assignmentId) || GenUtil.isBlankString(auditField)) {
+			throw new IllegalArgumentException("Invalid Arguments Passed to API saveDropAssignmentDetails()");
+		}
+		// Get Audit data map
+		Map<String, String> auditFieldMap = this.getAuditField(auditField);
+		String userId = auditFieldMap.get(AuditFieldNames.USERID.getValue());
+
+		return this.getConnectGradebookBusinessService().dropGradebookAssignmentScore(Long.parseLong(categoryId), Long.parseLong(assignmentId), true,
+				Long.parseLong(userId));
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * com.mhe.connect.services.gradebook.resource.IGradebookRestService#dropAssignmentFromGradeBook(java.lang.String,
+	 * java.lang.String, java.lang.String)
+	 */
+	@Override
+	public String dropAssignmentFromGradeBook(String categoryId, String assignmentId, String auditField) throws Exception {
+
+		RestResponse restResponse = new RestResponse();
+
+		try {
+
+			logger.debug("Inside dropAssignmentFromGradeBook, params non connect assignmentId={}, categoryId={}", new Object[] { assignmentId,
+						categoryId });
+			
+			// Validating Arguments
+			if (GenUtil.isBlankString(categoryId) || GenUtil.isBlankString(assignmentId) || GenUtil.isBlankString(auditField)) {
+				throw new IllegalArgumentException("Invalid Arguments Passed to API dropAssignmentFromGradeBook()");
+			}
+
+			// Get Audit data map
+			Map<String, String> auditFieldMap = this.getAuditField(auditField);
+			String userId = auditFieldMap.get(AuditFieldNames.USERID.getValue());
+
+			boolean flag = this.getConnectGradebookBusinessService().dropAssignmentFromGradeBook(Long.parseLong(categoryId),
+					Long.parseLong(assignmentId), Long.parseLong(userId));
+			restResponse.setResponse(flag);
+
+		} catch (IllegalArgumentException e) {
+			logger.error("IllegalArgumentException Message :- " + e.getMessage(), e);
+			restResponse.setException(e);
+		} catch (Exception e) {
+			logger.error("Exception Message :- " + e.getMessage(), e);
+			restResponse.setException(e);
+		}
+
+		return restResponse.sendResponse();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * com.mhe.connect.services.gradebook.resource.IGradebookRestService#getStudentGradebookReport(java.lang.String,
+	 * java.lang.String, java.lang.String)
+	 */
+	@Override
+	@SuppressWarnings("rawtypes")
+	public String getStudentGradebookReport(String courseId, String sectionId, String studentId) throws Exception {
+
+		RestResponse restResponse = new RestResponse();
+
+		try {
+			long courseIdLong = Long.parseLong(courseId);
+			final String courseTimeZone = courseManagementBusinessService.getCourseTimezone(courseIdLong);
+			
+			logger.debug("Inside getStudentGradebookReport, params courseId={}, sectionID={}, studentId={}", new Object[] { courseId, sectionId,
+						studentId });
+			
+			// Validating Arguments
+			if (GenUtil.isBlankString(courseId) || GenUtil.isBlankString(sectionId) || GenUtil.isBlankString(studentId)) {
+				throw new IllegalArgumentException("Invalid Arguments Passed to API getStudentGradebookReport()");
+			}
+
+			SectionGradebookReportOptions sectionGradebookReportOptions = this.getConnectGradebookBusinessService().fetchGradebookSettingsForSection(
+					Long.parseLong(sectionId));
+			GradeBookCategoryScoresResult wrapperObj = new GradeBookCategoryScoresResult();
+			wrapperObj.setGradeReportOptions(sectionGradebookReportOptions);
+			wrapperObj.setSectionID(Long.parseLong(sectionId));
+			List<GradebookSettings> addGradeList = sectionGradebookReportOptions.getGradebookSettings();
+			String attempToCalculate = "";
+			GradebookSettings addGradeObj = null;
+			for (Iterator i = addGradeList.iterator(); i.hasNext();) {
+				addGradeObj = (GradebookSettings) i.next();
+				if (ATTEMPT_TO_RECORD.equalsIgnoreCase(addGradeObj.getName())) {
+					wrapperObj.setAttemptType(addGradeObj.getValue());
+					attempToCalculate = addGradeObj.getValue();
+				}
+			}
+			wrapperObj = this.getConnectGradebookBusinessService().getStudentGradeCategoryReportInfo(wrapperObj, studentId);
+
+			StudentGradebookReportTO studentGradebookReport = new StudentGradebookReportTO();
+			List<StudentCategoryDetail> studentCategoryDetailList = new ArrayList<StudentCategoryDetail>();
+			List<StudentGradeCategoryReportInfo> studentScores = wrapperObj.getStudentGradeScores();
+			if (!studentScores.isEmpty()) {
+				StudentGradeCategoryReportInfo gradeCategoryReportInfo = studentScores.get(0);
+				studentGradebookReport.setStudentTotalGrade(gradeCategoryReportInfo.getTotGrade());
+				studentGradebookReport.setAttemptToCalculate(attempToCalculate);
+				if (sectionGradebookReportOptions.isLetterGradeEnabled() && sectionGradebookReportOptions.showLetterGradeToStudents()
+						&& gradeCategoryReportInfo.getLetterGrade() != null) {
+					studentGradebookReport.setStudentLetterGrade(URLEncoder.encode(gradeCategoryReportInfo.getLetterGrade(), UTF_8));
+				}
+				List<StudentGradeCategoryScore> studentGradeCategoryScores = studentScores.get(0).getStudentGradeCategoryScore();
+				// logic to get the TOT supported assignment types
+				Map<String, List<ConnectAssignmentCategoryType>> timeSpentCategoryAssignmentMap = this.getAssignmentReportsManagementBusinessService()
+						.getTimeSpentReportAssignmentCategoryType(sectionId);
+				Set<String> assignmentTypes = new HashSet<String>();
+				for (Entry<String, List<ConnectAssignmentCategoryType>> timeSpentCategoryAssignment : timeSpentCategoryAssignmentMap.entrySet()) {
+					List<ConnectAssignmentCategoryType> connectAssignmentCategoryTypeList = timeSpentCategoryAssignment.getValue();
+					for (ConnectAssignmentCategoryType connectAssignmentCategoryType : connectAssignmentCategoryTypeList) {
+						assignmentTypes.add(connectAssignmentCategoryType.getAssignmentType());
+					}
+
+				}
+				// End of checking the TOT supported assignment types
+
+				for (StudentGradeCategoryScore categoryScore : studentGradeCategoryScores) {
+					StudentCategoryDetail studentCategoryDetail = new StudentCategoryDetail();
+					studentCategoryDetail.setCategoryId(categoryScore.getCategoryId());
+					studentCategoryDetail.setCategoryName(categoryScore.getCategoryName());
+					studentCategoryDetail.setCategoryType(categoryScore.getCategoryType());
+					studentCategoryDetail.setCategoryWeight(categoryScore.getWeight());
+					studentCategoryDetail.setCategoryGrade(NumberUtils.getFormattedDecimalValue(categoryScore.getStudentCatScore(),
+							IConnectGradebookBusinessService.scaleValue));
+					studentCategoryDetail.setCategoryHasAssignments(categoryScore.hasAssignments());
+					studentCategoryDetail.setCategoryTimeSpent(-1);
+					studentCategoryDetail.setCategoryHasApplicableAssignments(categoryScore.isCategoryHasApplicableAssignments());
+					// logic to check TOT supported assignment types in the current category
+
+					if (!categoryScore.hasAssignments()) {
+						studentCategoryDetail.setCategoryTimeSpent(-1);
+					} else {
+						if (categoryScore.getCategoryType().equals("user")) {
+							List<GradebookAssignmentInfo> assignmentlist = this.getConnectGradebookBusinessService()
+									.getGradebookAssignmentsbyCategory(Long.parseLong(sectionId), categoryScore.getCategoryId(),courseTimeZone);
+							for (GradebookAssignmentInfo gradebookAssignmentInfo : assignmentlist) {
+								if (gradebookAssignmentInfo.getAssignmentType() != null
+										&& assignmentTypes.contains(gradebookAssignmentInfo.getAssignmentType())) {
+									studentCategoryDetail.setCategoryTimeSpent(categoryScore.getStudentTimeSpentIncategory() <= 0 ? 0 : categoryScore
+											.getStudentTimeSpentIncategory());
+									break;
+								}
+							}
+						} else {
+							List<GradebookAssignmentInfo> assignmentlist = this.getConnectGradebookBusinessService()
+									.getGradebookAssignmentsbyCategory(Long.parseLong(sectionId), categoryScore.getCategoryId(),courseTimeZone);
+							for (GradebookAssignmentInfo gradebookAssignmentInfo : assignmentlist) {
+								if (gradebookAssignmentInfo.getAssignmentType() != null
+										&& assignmentTypes.contains(gradebookAssignmentInfo.getAssignmentType())) {
+									studentCategoryDetail.setCategoryTimeSpent(categoryScore.getStudentTimeSpentIncategory() <= 0 ? 0 : categoryScore
+											.getStudentTimeSpentIncategory());
+									break;
+								}
+							}
+						}
+					}
+					studentCategoryDetailList.add(studentCategoryDetail);
+				}
+			}
+
+			studentGradebookReport.setStudentCategoryDetail(studentCategoryDetailList);
+
+			// Setting response
+			restResponse.setResponse(studentGradebookReport);
+		} catch (IllegalArgumentException e) {
+			logger.error("IllegalArgumentException Message :- " + e.getMessage(), e);
+			restResponse.setException(e);
+		} catch (Exception e) {
+			logger.error("Exception Message :- " + e.getMessage(), e);
+			restResponse.setException(e);
+		}
+
+		return restResponse.sendResponse();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * com.mhe.connect.services.gradebook.resource.IGradebookRestService#saveCustomCategoriesOverrideScore(java.lang
+	 * .String, com.mhe.connect.services.gradebook.valueobj.CustomCategoryOverrideGradeTO[])
+	 */
+	@Override
+	public String saveCustomCategoriesOverrideScore(String sectionId, CustomCategoryOverrideGradeTO[] customCategoryOverrideGradeTOArray,
+			String auditField) {
+
+		RestResponse restResponse = new RestResponse();
+
+		try {
+
+			// Validating Arguments
+			if (GenUtil.isBlankString(sectionId) || customCategoryOverrideGradeTOArray == null || customCategoryOverrideGradeTOArray.length == 0 || GenUtil.isBlankString(auditField)) {
+				throw new IllegalArgumentException("Invalid Arguments Passed to API saveCustomCategoriesOverrideScore()");
+			}
+
+			// Logging input parameter in debug mode.
+			if (logger.isDebugEnabled()) {
+				logger.debug("Inside saveCustomCategoriesOverrideScore, params sectionId=" + sectionId);
+				for (CustomCategoryOverrideGradeTO ccogTo : customCategoryOverrideGradeTOArray) {
+					logger.debug("CustomCategoryOverrideGradeTO object details: " + ccogTo.toString());
+				}
+			}
+
+			// Get Audit data map
+			Map<String, String> auditFieldMap = this.getAuditField(auditField);
+			String userId = auditFieldMap.get(AuditFieldNames.USERID.getValue());
+
+			// Business logic
+			List<StudentGradeCategoryReportInfo> studentGradeCategoryReportInfoList = new ArrayList<StudentGradeCategoryReportInfo>();
+			StudentGradeCategoryReportInfo studentGradeCategoryReportInfo = null;
+			StudentGradeCategoryScore studentGradeCategoryScore = null;
+
+			// prepare object to send for back-end update
+			for (CustomCategoryOverrideGradeTO customCategoryOverrideGradeTO : customCategoryOverrideGradeTOArray) {
+				studentGradeCategoryReportInfo = new StudentGradeCategoryReportInfo();
+				studentGradeCategoryScore = new StudentGradeCategoryScore();
+				studentGradeCategoryScore.setUserId(customCategoryOverrideGradeTO.getStudentId());
+				studentGradeCategoryReportInfo.setUserId("" + customCategoryOverrideGradeTO.getStudentId());
+				studentGradeCategoryScore.setCategoryId(customCategoryOverrideGradeTO.getCategoryId());
+				studentGradeCategoryScore.setSectionId(Long.parseLong(sectionId));
+				studentGradeCategoryScore.setStudentCatScore(customCategoryOverrideGradeTO.getInstructorOverrideScore());
+				studentGradeCategoryScore.setCreatedOrModifiedBy(Long.parseLong(userId));
+				studentGradeCategoryReportInfo.addCategoryScore(studentGradeCategoryScore);
+				studentGradeCategoryReportInfoList.add(studentGradeCategoryReportInfo);
+			}
+
+			boolean flag = false;
+
+			if (!studentGradeCategoryReportInfoList.isEmpty()) {
+				flag = this.getConnectGradebookBusinessService().saveCustomGradeGategoryScore(studentGradeCategoryReportInfoList, sectionId);
+			}
+
+			// Setting response
+			restResponse.setResponse(flag);
+		} catch (IllegalArgumentException e) {
+			logger.error("IllegalArgumentException Message :- " + e.getMessage(), e);
+			restResponse.setException(e);
+		} catch (Exception e) {
+			logger.error("Exception Message :- " + e.getMessage(), e);
+			restResponse.setException(e);
+		}
+
+		return restResponse.sendResponse();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * com.mhe.connect.services.gradebook.resource.IGradebookRestService#getCreateGradebookSystemCategory(java.lang.
+	 * String)
+	 */
+	@Override
+	public String getCreateGradebookSystemCategory(String sectionId) {
+
+		RestResponse restResponse = new RestResponse();
+
+		try {
+
+			// Validating Arguments
+			if (GenUtil.isBlankString(sectionId)) {
+				throw new IllegalArgumentException("Invalid Arguments Passed to API getCreateGradebookSystemCategory()");
+			}
+
+			// Logging input parameter in debug mode.
+			logger.debug("Inside getCreateGradebookSystemCategory, params sectionId={}", sectionId);
+			
+			// Service API call
+			List<GradebookCategory> systemAssignmentCategoriesList = this.getConnectGradebookBusinessService().getSupportedGradebookCategories(
+					sectionId);
+			List<SystemCategoryTO> SystemCategoryTOList = new ArrayList<SystemCategoryTO>();
+			for (GradebookCategory gradebookCategory : systemAssignmentCategoriesList) {
+				SystemCategoryTO systemCategoryTO = new SystemCategoryTO();
+				systemCategoryTO.setCategoryName(gradebookCategory.getName());
+				SystemCategoryTOList.add(systemCategoryTO);
+			}
+
+			restResponse.setResponse(SystemCategoryTOList);
+
+		} catch (IllegalArgumentException e) {
+			logger.error("IllegalArgumentException Message :- " + e.getMessage(), e);
+			restResponse.setException(e);
+		} catch (Exception e) {
+			logger.error("Exception Message :- " + e.getMessage(), e);
+			restResponse.setException(e);
+		}
+
+		return restResponse.sendResponse();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * com.mhe.connect.services.gradebook.resource.IGradebookRestService#saveNonConnectAssignmentDetail(java.lang.String
+	 * , java.lang.String, java.lang.String, com.mhe.connect.services.gradebook.valueobj.NonConnectAssignmentTO[],
+	 * java.lang.String) Rest service to save/insert the non-connect assignment information in the
+	 * GB_NON_CONNECT_ASSIGNMENT and gb_category_assignment_xref tables. Api constructs the list of non-connect
+	 * assignment value object from the array of NonConnectAssignmentTO's and calls the service methods to insert/save
+	 * the data
+	 */
+	@Override
+	public String saveNonConnectAssignmentDetail(String sectionId, String categoryId, String userId,
+			NonConnectAssignmentTO[] nonConnectAssignmentTOArray, String auditField) {
+
+		RestResponse restResponse = new RestResponse();
+
+		try {
+
+			// Validating Arguments
+			if (GenUtil.isBlankString(sectionId) || GenUtil.isBlankString(categoryId) || GenUtil.isBlankString(userId)
+					|| nonConnectAssignmentTOArray == null || nonConnectAssignmentTOArray.length == 0) {
+				throw new IllegalArgumentException("Invalid Arguments Passed to API saveNonConnectAssignmentDetail()");
+			}
+
+			// Logging input parameter in debug mode.
+			logger.debug("Inside saveNonConnectAssignmentDetail, params sectionId={}, categoryId={}, userId={}, nonConnectAssignmentTOArray={}",
+												new Object[] { sectionId, categoryId, userId, Arrays.toString(nonConnectAssignmentTOArray) });
+			
+			// Get Audit data map
+
+			// constructs the list of non-connect assignment value object from the array of NonConnectAssignmentTO's
+			Long categoryid = Long.parseLong(categoryId);
+			NonConnectAssignmentDetails nonConnectAssignmentDetails = new NonConnectAssignmentDetails();
+			nonConnectAssignmentDetails.setNonConnectAssignmentVOList(getNonConnectAssignmentList(nonConnectAssignmentTOArray));
+			nonConnectAssignmentDetails.setUserId(userId);
+			nonConnectAssignmentDetails.setCategoryId(categoryid);
+
+			Boolean result = Boolean.FALSE;
+			result = this.getConnectGradebookBusinessService().addNonConnectAssignments(nonConnectAssignmentDetails);
+
+			// Setting response
+			restResponse.setResponse(result);
+
+		} catch (IllegalArgumentException e) {
+			logger.error("IllegalArgumentException Message :- " + e.getMessage(), e);
+			restResponse.setException(e);
+		} catch (Exception e) {
+			logger.error("Exception Message :- " + e.getMessage(), e);
+			restResponse.setException(e);
+		}
+
+		return restResponse.sendResponse();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * com.mhe.connect.services.gradebook.resource.IGradebookRestService#updateNonConnectAssignmentDetail(java.lang.
+	 * String, java.lang.String, java.lang.String, com.mhe.connect.services.gradebook.valueobj.NonConnectAssignmentTO,
+	 * java.lang.String) Rest service to update the non-connect assignment information in the GB_NON_CONNECT_ASSIGNMENT
+	 * and gb_category_assignment_xref tables. Api constructs the non-connect assignment value object from the
+	 * NonConnectAssignmentTO and calls the service methods to update the data
+	 */
+	@Override
+	public String updateNonConnectAssignmentDetail(String sectionId, String categoryId, String userId, NonConnectAssignmentTO nonConnectAssignmentTO,
+			String auditField) {
+
+		RestResponse restResponse = new RestResponse();
+
+		try {
+
+			// Validating Arguments
+			if (GenUtil.isBlankString(sectionId) || GenUtil.isBlankString(categoryId) || GenUtil.isBlankString(userId)
+					|| nonConnectAssignmentTO == null) {
+				throw new IllegalArgumentException("Invalid Arguments Passed to API updateNonConnectAssignmentDetail()");
+			}
+
+			// Logging input parameter in debug mode.
+			logger.debug("Inside updateNonConnectAssignmentDetail, params sectionId={}, categoryId={}, userId={}, nonConnectAssignmentTO={}",
+												new Object[] { sectionId, categoryId, userId, nonConnectAssignmentTO.toString() });
+			if (nonConnectAssignmentTO.getNonConnectAssignmentId() <= 0l) {
+				throw new IllegalArgumentException("Invalid Arguments Passed to API updateNonConnectAssignmentDetail()");
+			}
+
+			// Get Audit data map
+			Map auditFieldMap = this.getAuditField(auditField);
+
+			// constructs the list of non-connect assignment value object from the array of NonConnectAssignmentTO's
+			Long categoryid = Long.parseLong(categoryId);
+			Long sectionid = Long.parseLong(sectionId);
+
+			List<NonConnectAssignmentVO> nonConnectAssignmentVOList = new ArrayList<NonConnectAssignmentVO>();
+			// constructs the list of non-connect assignment value object from the array of NonConnectAssignmentTO's
+			NonConnectAssignmentVO nonConnectAssignmentVO = new NonConnectAssignmentVO();
+			nonConnectAssignmentVO.setTitle(URLDecoder.decode(nonConnectAssignmentTO.getNonConnectAssignmentTitle(), "UTF-8"));
+
+			nonConnectAssignmentVO.setPoints(nonConnectAssignmentTO.getNonConnectAssignmentPoints());
+			nonConnectAssignmentVO.setAssignmentId(nonConnectAssignmentTO.getNonConnectAssignmentId());
+			nonConnectAssignmentVOList.add(nonConnectAssignmentVO);
+
+			NonConnectAssignmentDetails nonConnectAssignmentDetails = new NonConnectAssignmentDetails();
+			nonConnectAssignmentDetails.setNonConnectAssignmentVOList(nonConnectAssignmentVOList);
+			nonConnectAssignmentDetails.setUserId(userId);
+			nonConnectAssignmentDetails.setCategoryId(categoryid);
+			nonConnectAssignmentDetails.setSectionId(sectionid);
+
+			Boolean result = Boolean.FALSE;
+			result = this.getConnectGradebookBusinessService().editNonConnectAssignment(nonConnectAssignmentDetails);
+
+			// Setting response
+			restResponse.setResponse(result);
+
+		} catch (IllegalArgumentException e) {
+			logger.error("IllegalArgumentException Message :- " + e.getMessage(), e);
+			restResponse.setException(e);
+		} catch (Exception e) {
+			logger.error("Exception Message :- " + e.getMessage(), e);
+			restResponse.setException(e);
+		}
+
+		return restResponse.sendResponse();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.mhe.connect.services.gradebook.resource.IGradebookRestService#fetchGradebookDefaultLetterGradeDetails()
+	 */
+	@Override
+	public String fetchGradebookDefaultLetterGradeDetails() {
+
+		RestResponse restResponse = new RestResponse();
+
+		try {
+
+			List<GradebookDefaultLetterGradeTO> gradebookDefaultLetterGradeTOList = new ArrayList<GradebookDefaultLetterGradeTO>();
+
+			// Service API call
+			final List<LetterGradeSettings> defaultLetterGradeSettingsList = this.getConnectGradebookBusinessService()
+					.fetchDefaultLetterGradeSettings();
+
+			// Iterate over service API return object and set it in Transfer Object
+			for (LetterGradeSettings defaultLetterGradeSettings : defaultLetterGradeSettingsList) {
+				GradebookDefaultLetterGradeTO gradebookDefaultLetterGradeTO = new GradebookDefaultLetterGradeTO();
+				gradebookDefaultLetterGradeTO.setDefaultLetterGrade(defaultLetterGradeSettings.getLetterGrade());
+				gradebookDefaultLetterGradeTO.setDefaultLetterGradeLowerValue(defaultLetterGradeSettings.getLowerLimit());
+				gradebookDefaultLetterGradeTO.setDefaultLetterGradeUpperValue(defaultLetterGradeSettings.getUpperLimit());
+				gradebookDefaultLetterGradeTOList.add(gradebookDefaultLetterGradeTO);
+			}
+
+			// Setting TO to response
+			restResponse.setResponse(gradebookDefaultLetterGradeTOList);
+
+		} catch (Exception e) {
+			logger.error("Exception Message :- " + e.getMessage(), e);
+			restResponse.setException(e);
+		}
+
+		return restResponse.sendResponse();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * com.mhe.connect.services.gradebook.resource.IGradebookRestService#getSingleCategoryPrerequisiteData(java.lang
+	 * .String)
+	 */
+	@Override
+	public String getSingleCategoryPrerequisiteData(String sectionId) {
+
+		RestResponse restResponse = new RestResponse();
+
+		try {
+
+			// Validating Arguments
+			if (GenUtil.isBlankString(sectionId)) {
+				throw new IllegalArgumentException("Invalid Arguments Passed to API getSingleCategoryPrerequisiteData()");
+			}
+
+			// Logging input parameter in debug mode.
+			logger.debug("Inside getSingleCategoryPrerequisiteData, params sectionId={}", new Object[] { sectionId });
+			
+			SingleCategoryPrerequisiteDataTO singleCategoryPrerequisiteData = new SingleCategoryPrerequisiteDataTO();
+
+			// Service API call
+			boolean showGradeInPoints = this.getConnectGradebookBusinessService().getGBGradeShowPointFlag(Long.parseLong(sectionId));
+			String gradeDisplayMode = showGradeInPoints ? GradebookScoreDisplayOptions.POINTS.getValue() : GradebookScoreDisplayOptions.PERCENTAGE
+					.getValue();
+
+			// Set it in Transfer Object
+			singleCategoryPrerequisiteData.setGradeDisplayMode(gradeDisplayMode);
+
+			// Setting TO to response
+			restResponse.setResponse(singleCategoryPrerequisiteData);
+
+		} catch (Exception e) {
+			logger.error("Exception Message :- " + e.getMessage(), e);
+			restResponse.setException(e);
+		}
+
+		return restResponse.sendResponse();
+
+	}
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * com.mhe.connect.services.gradebook.resource.IGradebookRestService#getSingleCategoryPrerequisiteData(java.lang
+	 * .String, java.lang.String)
+	 */
+	@Override
+	public String getSingleCategoryPrerequisiteData(String sectionId, String userId) {
+
+		RestResponse restResponse = new RestResponse();
+
+		try {
+
+			// Validating Arguments
+			if (GenUtil.isBlankString(sectionId)) {
+				throw new IllegalArgumentException("Invalid Arguments Passed to API getSingleCategoryPrerequisiteData()");
+			}
+
+			// Logging input parameter in debug mode.
+			logger.debug("Inside getSingleCategoryPrerequisiteData for grader flow, params sectionId={}, userId={}", new Object[] { sectionId, userId });
+			
+			SingleCategoryPrerequisiteDataTO singleCategoryPrerequisiteData = new SingleCategoryPrerequisiteDataTO();
+
+			// Service API call
+			boolean showGradeInPoints = this.getConnectGradebookBusinessService().getGBGradeShowPointFlag(Long.parseLong(sectionId), Long.parseLong(userId));
+			String gradeDisplayMode = showGradeInPoints ? GradebookScoreDisplayOptions.POINTS.getValue() : GradebookScoreDisplayOptions.PERCENTAGE
+					.getValue();
+
+			// Set it in Transfer Object
+			singleCategoryPrerequisiteData.setGradeDisplayMode(gradeDisplayMode);
+
+			// Setting TO to response
+			restResponse.setResponse(singleCategoryPrerequisiteData);
+
+		} catch (Exception e) {
+			logger.error("Exception Message :- " + e.getMessage(), e);
+			restResponse.setException(e);
+		}
+
+		return restResponse.sendResponse();
+
+	}
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * com.mhe.connect.services.gradebook.resource.IGradebookRestService#getSingleStudentPrerequisiteData(java.lang.
+	 * String)
+	 */
+	@Override
+	public String getSingleStudentPrerequisiteData(String sectionId) {
+
+		RestResponse restResponse = new RestResponse();
+
+		try {
+
+			// Validating Arguments
+			if (GenUtil.isBlankString(sectionId)) {
+				throw new IllegalArgumentException("Invalid Arguments Passed to API getSingleCategoryPrerequisiteData()");
+			}
+
+			// Logging input parameter in debug mode.
+			logger.debug("Inside getSingleCategoryPrerequisiteData, params sectionId={}", new Object[] { sectionId });
+			
+			SingleStudentPrerequisiteDataTO singleStudentPrerequisiteData = new SingleStudentPrerequisiteDataTO();
+
+			// Service API call
+			boolean showGradeInPoints = this.getConnectGradebookBusinessService().getGBGradeShowPointFlag(Long.parseLong(sectionId));
+			String gradeDisplayMode = showGradeInPoints ? GradebookScoreDisplayOptions.POINTS.getValue() : GradebookScoreDisplayOptions.PERCENTAGE
+					.getValue();
+
+			// Set it in Transfer Object
+			singleStudentPrerequisiteData.setGradeDisplayMode(gradeDisplayMode);
+
+			// Setting TO to response
+			restResponse.setResponse(singleStudentPrerequisiteData);
+
+		} catch (Exception e) {
+			logger.error("Exception Message :- " + e.getMessage(), e);
+			restResponse.setException(e);
+		}
+
+		return restResponse.sendResponse();
+
+	}
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * com.mhe.connect.services.gradebook.resource.IGradebookRestService#getSingleStudentPrerequisiteData(java.lang.
+	 * String, java.lang.String)
+	 */
+	@Override
+	public String getSingleStudentPrerequisiteData(String sectionId, String userId) {
+
+		RestResponse restResponse = new RestResponse();
+
+		try {
+
+			// Validating Arguments
+			if (GenUtil.isBlankString(sectionId)) {
+				throw new IllegalArgumentException("Invalid Arguments Passed to API getSingleCategoryPrerequisiteData()");
+			}
+
+			// Logging input parameter in debug mode.
+			logger.debug("Inside getSingleCategoryPrerequisiteData for grader, params sectionId={}, userId={}", new Object[] { sectionId, userId });
+			
+			SingleStudentPrerequisiteDataTO singleStudentPrerequisiteData = new SingleStudentPrerequisiteDataTO();
+
+			// Service API call
+			boolean showGradeInPoints = this.getConnectGradebookBusinessService().getGBGradeShowPointFlag(Long.parseLong(sectionId), Long.parseLong(userId));
+			String gradeDisplayMode = showGradeInPoints ? GradebookScoreDisplayOptions.POINTS.getValue() : GradebookScoreDisplayOptions.PERCENTAGE
+					.getValue();
+
+			// Set it in Transfer Object
+			singleStudentPrerequisiteData.setGradeDisplayMode(gradeDisplayMode);
+
+			// Setting TO to response
+			restResponse.setResponse(singleStudentPrerequisiteData);
+
+		} catch (Exception e) {
+			logger.error("Exception Message :- " + e.getMessage(), e);
+			restResponse.setException(e);
+		}
+
+		return restResponse.sendResponse();
+
+	}
+	/*
+	 * (non-Javadoc)
+	 * @see com.mhe.connect.services.gradebook.resource.IGradebookRestService#updateGradeDisplayMode(java.lang.String,
+	 * java.lang.String, java.lang.String)
+	 */
+	@Override
+	public String updateGradeDisplayMode(String sectionId, String gradeDisplayMode, String role, String auditField) {
+
+		RestResponse restResponse = new RestResponse();
+		String gradeDisplay = "";
+		try {
+
+			// Validating Arguments
+			if (GenUtil.isBlankString(sectionId) || GenUtil.isBlankString(gradeDisplayMode) || GenUtil.isBlankString(auditField)) {
+				throw new IllegalArgumentException("Invalid Arguments Passed to API updateGradeDisplayMode()");
+			}
+
+			// Logging input parameter in debug mode.
+			logger.debug("Inside updateGradeDisplayMode, params sectionId={}, gradeDisplayMode={}", new Object[] { sectionId, gradeDisplayMode });
+			
+			// Get Audit data map
+			Map<String, String> auditFieldMap = this.getAuditField(auditField);
+			String userId = auditFieldMap.get(AuditFieldNames.USERID.getValue());
+
+			// Business logic
+			if (gradeDisplayMode.equals(GradebookScoreDisplayOptions.POINTS.getValue())) {
+				gradeDisplay = "TRUE";
+			} else {
+				gradeDisplay = "FALSE";
+			}
+
+			// Service API call
+			boolean flag = false;
+			if("Section_Grader".equalsIgnoreCase(role)){
+				flag = connectGradebookBusinessService.updateGBGradeShowPointFlagForGrader(Long.parseLong(sectionId), gradeDisplay,
+						Long.parseLong(userId));
+			}
+			else{
+				flag = connectGradebookBusinessService.updateGBGradeShowPointFlag(Long.parseLong(sectionId), gradeDisplay,
+					Long.parseLong(userId));
+			}
+			// Setting TO to response
+			restResponse.setResponse(flag);
+		} catch (Exception e) {
+			logger.error("Exception Message :- " + e.getMessage(), e);
+			restResponse.setException(e);
+		}
+
+		return restResponse.sendResponse();
+	}
+
+	/**
+	 * Send email to student
+	 * @param emailMessageVO
+	 * @param sectionId
+	 * @param actionType
+	 * @return String
+	 * 
+	 */
+	@Override
+	public String sendEmail(EmailMessageVO emailMessageVO, @PathParam ("sectionId") String sectionId, @PathParam ("actionType") String actionType, @PathParam ("copyToInstructor") String copyToInstructor) {
+		RestResponse restResponse = new RestResponse();
+		String logLevel = Configuration.getSystemValue(GRADEBOOK_STUDENT_EMAIL_ENABLED);
+		String sender = Configuration.getSystemValue(SENDER_GRADEBOOK_STUDENT_EMAIL);
+		String instructorId="";
+		try {
+
+			// Logging input parameter in debug mode.
+				logger.info("-sendEmail for gradebook student- Inside GRADEBOOK_STUDENT_EMAIL_ENABLED sendEmail, emailMessageVO:{} .. and logLevel={}", new Object[] { emailMessageVO, logLevel });
+			instructorId = emailMessageVO.getCcRecipients()==null?EMPTY_STRING:emailMessageVO.getCcRecipients()[0];	
+			// Service API call
+			
+			List<String> userEmailInfo = connectGradebookBusinessService.getUserMailIdInfo(emailMessageVO.getBccRecipients());
+			String[] recipientsArray = userEmailInfo.toArray(new String[userEmailInfo.size()]);
+			emailMessageVO.setBccRecipients(recipientsArray);
+			
+			List<String> ccUserEmailInfo =connectGradebookBusinessService.getUserMailIdInfo(emailMessageVO.getCcRecipients());
+			emailMessageVO.setCcRecipients(ccUserEmailInfo.toArray(new String[ccUserEmailInfo.size()]));
+		
+			emailMessageVO.setSender(GenUtil.isBlankString(sender)?SENDER:sender);
+			emailMessageVO.setReplyTo(emailMessageVO.getCcRecipients()==null?EMPTY_STRING:emailMessageVO.getCcRecipients()[0]);
+			if(! ("Y".equalsIgnoreCase(copyToInstructor))){
+				emailMessageVO.setCcRecipients(new String[0]);
+			}
+			emailMessageVO.setHtmlFlag("Y");
+			emailService = connectEmailServiceHelper.getEmailService();
+			
+			logger.info("-sendEmail for gradebook student- instructor:{}, sectionId:{}, EmailMessageVO:{}, actionType:{}, copyToInstructor:{}", new Object[]{instructorId, sectionId, emailMessageVO,actionType,copyToInstructor});
+			
+			emailService.send(emailMessageVO);
+			
+			// Setting TO to response
+			logger.info("-sendEmail for gradebook student- email notification sent successfully to students' private mailbox instructor:{}, sectionId:{}", new Object[]{instructorId,sectionId});
+			
+			restResponse.setResponse(true);
+			if(ALL.equalsIgnoreCase(logLevel)){
+				saveAuditStudentEmail(emailMessageVO,  GRADEBOOK,  actionType, EMPTY_STRING, SUCCESS, parseLong(sectionId, 0L), instructorId,copyToInstructor);
+			}
+		} catch (Exception e) {
+			logger.error("-sendEmail for gradebook student- InstructorId:"+instructorId+" sectionId:"+sectionId+" Exception Message :- " + e.getMessage(), e);
+			saveAuditStudentEmail(emailMessageVO,   GRADEBOOK,  actionType, e.getMessage(), FAILURE, parseLong(sectionId, 0L), instructorId,copyToInstructor);
+			restResponse.setException(e);
+		}
+
+		return restResponse.sendResponse();
+
+	}
+	
+	/**
+	 * making coma separated String of email ids. 
+	 * 
+	 */
+	private void saveAuditStudentEmail(EmailMessageVO emailMessageVo,  String emailFlowName, String actionType, String exceptionDetails, String status, long sectionId, String instructorId,String copyToInstructor){
+		final EmailMessageAuditVO emailMessageAuditVO = new EmailMessageAuditVO();
+		
+		emailMessageAuditVO.setEmailMessageVO(emailMessageVo);
+		emailMessageAuditVO.setActionType(actionType);
+		emailMessageAuditVO.setCopyToInstructor(copyToInstructor);
+		emailMessageAuditVO.setEmailFlow(emailFlowName);
+		emailMessageAuditVO.setSectionId(sectionId);
+		emailMessageAuditVO.setInstructorId(instructorId);
+		emailMessageAuditVO.setStatus(status);
+		emailMessageAuditVO.setExceptionDetail(exceptionDetails);
+		Runnable r =new Runnable() {
+			@Override
+			public void run() {
+				connectGradebookBusinessService.saveAuditStudentEmail(emailMessageAuditVO);
+			}
+		};
+		jobExecutor.executeAuditJob(r);
+	}
+
+
+	/**
+	 * Method to convert NonConnectAssignmentTO array to NonConnectAssignmentVO list.
+	 * @param nonConnectAssignmentTOArray
+	 * @return
+	 * @throws UnsupportedEncodingException
+	 */
+	private List<NonConnectAssignmentVO> getNonConnectAssignmentList(NonConnectAssignmentTO[] nonConnectAssignmentTOArray)
+			throws UnsupportedEncodingException {
+		List<NonConnectAssignmentVO> nonConnectAssignmentVOList = new ArrayList<NonConnectAssignmentVO>();
+		for (NonConnectAssignmentTO nonConnectAssignmentTO : nonConnectAssignmentTOArray) {
+			NonConnectAssignmentVO nonConnectAssignmentVO = new NonConnectAssignmentVO();
+			nonConnectAssignmentVO.setTitle(URLDecoder.decode(nonConnectAssignmentTO.getNonConnectAssignmentTitle(), "UTF-8"));
+			nonConnectAssignmentVO.setPoints(nonConnectAssignmentTO.getNonConnectAssignmentPoints());
+			nonConnectAssignmentVOList.add(nonConnectAssignmentVO);
+		}
+		return nonConnectAssignmentVOList;
+	}
+
+	/**
+	 * Method to get audit field data
+	 * @param auditField
+	 * @return Map of Audit field data
+	 */
+	private Map<String, String> getAuditField(String auditField) {
+
+		// Validating Arguments
+		if (GenUtil.isBlankString(auditField)) {
+			return null;
+		}
+
+		String delimiter = ":";
+		String[] auditFieldArray = auditField.split(delimiter);
+		Map<String, String> auditFieldMap = new HashMap<String, String>();
+		for (int i = 0; i < auditFieldArray.length; i = i + 2) {
+			auditFieldMap.put(auditFieldArray[i], auditFieldArray[i + 1]);
+		}
+
+		return auditFieldMap;
+	}
+	private Long parseLong(Object obj , long defaultValue)
+    {
+        long returnValue = defaultValue;
+        if(obj!=null)
+        {
+            if(ValidationUtils.isValidLong(""+obj))
+            {
+                returnValue = Long.parseLong(""+obj);
+            }
+        }
+        return returnValue;
+    }
+
+
+}
